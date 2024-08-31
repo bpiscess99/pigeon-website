@@ -86,12 +86,6 @@
   background-color: #e04622 !important;
   border-color: #e04622 !important;
 }
-/* 
-@media (max-width: 500px) and (min-width: 200px) {
-  .zza {
-    width: 206% !important;
-  }
-} */
 
 
 .zza:hover{
@@ -165,12 +159,6 @@ background-color: white !important;
   width: 76px;
 }
 
-
-/* @media (max-width: 500px) and (min-width: 200px) {
-  .aaq{
-      width: 210%;
-  }
-} */
 
 .active-link {
   background-color: orange;
@@ -293,7 +281,13 @@ color-mix(in srgb, var(--default-color), transparent 90%);
 @media (max-width: 315px) and (min-width: 200px) {
   #zooma{
     zoom: 0.3; 
-  }
-  
-  
+  } 
+}
+
+.label-size{
+  font-size:small;
+}
+.star{
+  color: #e04622;
+  font-size: 1.3rem;
 }

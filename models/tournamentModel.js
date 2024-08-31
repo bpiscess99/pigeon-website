@@ -1,85 +1,84 @@
 import mongoose from "mongoose";
 
+const tournamentSchema = mongoose.Schema(
+  {
+    club_owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, "club owner is required"],
+      ref: "users",
+    },
 
-const tournamentSchema = mongoose.Schema({
-    owner:{
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "owner"
+    image: {
+      type: String,
     },
-    // clubName: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     required: true,
-    //     ref: "users",
-    // },
-    clubName:{
-        type: String,
-        required: true,
-    },
-    // image:{
-    // type: String,
-    // },
     tournamentName: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-    tournamentInformation:{
-        type: String,
+    tournamentInformation: {
+      type: String,
     },
-    category:{
-        type: String
+    category: {
+      type: String,
     },
     startDate: {
-        type: Date,
-        required: true
-    }, 
-    numberOfDays:{
-        type: Number,
-        required: true,
+      type: Date,
+      required: [true, "startdate is required"],
+    },
+    numberOfDays: {
+      type: Number,
+      // required: [true, "numberOfDays is required"],
     },
     startTime: {
-        type: String,
-        required: true,
+      type: String,
+      // required: [true, "startTime is required"],
     },
-    numberOfPigeons:{
-        type: Number,
-        required: true,
+    numberOfPigeons: {
+      type: Number,
+      // required: [true, "numberOfPigeons ia required"],
     },
     noteTimeForPigeons: {
-        type: Number,
+      type: String,
     },
     helperPigeons: {
-        type: Number
+      type: Number,
     },
     continueDays: {
-        type: Number,
+      type: Number,
     },
-    status: {
-        type: String,
-        enum: ["active", "not active"],
-        default: "active",
+    status_: {
+      type: String,
+      enum: ["active", "in active"],
+      default: "active",
     },
     type: {
-        type: String,
+      type: String,
     },
-    participatingLoft: { 
-       type: String,
+    participatingLoft: {
+      type: [String],
     },
-    numberOfPrizes:{
-        type: Number,
+    numberOfPrizes: {
+      type: Number,
     },
-    prize1:{
-        type: Number,
+    prize1: {
+      type: Number,
     },
     prize2: {
-        type: Number,
+      type: Number,
     },
     prize3: {
-        type: Number
-    }
-},{
-    timestamps: true
-}
+      type: Number,
+    },
+    prize4: {
+      type: Number,
+    },
+    prize5: {
+      type: Number,
+    },
+  },
+  {
+    timestamps: true,
+  }
 );
 
 export default mongoose.model("Tournament", tournamentSchema);

@@ -1,91 +1,98 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-        try {
-            const response = await axios.post('/api/v1/auth/login', { email, password });
-            const { success, message, user, token } = response.data;
+    try {
+      const response = await axios.post("/api/v1/auth/login", {
+        email,
+        password,
+      });
+      const { success, message, user, token } = response.data;
 
-            if (success) {
-                localStorage.setItem('token', token);
+      if (success) {
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
 
-                // Navigate based on user role and id
-                if (user.role === 1) {
-                    navigate('/create'); // Navigate to /create page if role is 1
-                }else if (user.role === 0 && user.slug) {
-                  navigate(`/clubdetail/${user.slug}`)
-                
-                
-                // else if (user.role === 0 && user.id) {
-                //     navigate(`/clubdetail/${user.id}`); // Use id for navigation
-                } else {
-                    alert('User slug is missing.');
-                }
-            } else {
-                alert(message);
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('Error logging in. Please try again.');
+        if (user.role === 1) {
+          navigate("/clubs"); // Navigate to /create page if role is 1
+        } else if (user.role === 0 && user.slug) {
+          navigate(`/clubdetail/${user.slug}`);
+        } else {
+          alert("User slug is missing.");
         }
-    };
+      } else {
+        alert(message);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Error logging in. Please try again.");
+    }
+  };
 
-    return (
-        <>
-            <header id="header" className="headers d-flex align-items-center sticky-top">
-                <div className="container-fluid container-xl position-relative d-flex align-items-center">
-                    <a href="/" className="logo d-flex align-items-center me-auto">
-                        <h1 className="sitename">Pigeon</h1>
-                    </a>
-                    <nav id="navmenu" className="navmenu">
-                        <ul>
-                            <li><a href="/" className="active">Home<br /></a></li>
-                        </ul>
-                        <i className="mobile-nav-toggle d-xl-none bi bi-list" />
-                    </nav>
-                </div>
-            </header>
+  return (
+    <>
+      <header
+        id="header"
+        className="headers d-flex align-items-center sticky-top"
+      >
+        <div className="container-fluid container-xl position-relative d-flex align-items-center">
+          <a href="/" className="logo d-flex align-items-center me-auto">
+            <h1 className="sitename">Pigeon</h1>
+          </a>
+          <nav id="navmenu" className="navmenu">
+            <ul>
+              <li>
+                <a href="/" className="active">
+                  Home
+                  <br />
+                </a>
+              </li>
+            </ul>
+            <i className="mobile-nav-toggle d-xl-none bi bi-list" />
+          </nav>
+        </div>
+      </header>
 
-            <div id='www'>
-                <div className="form-containers">
-                    <form onSubmit={handleSubmit}>
-                        <h4 className="title">LOGIN HERE</h4>
-                        <div className="mb-3">
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="form-control"
-                                placeholder="Enter Your Email"
-                                required
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="form-control"
-                                placeholder="Enter Your Password"
-                                required
-                            />
-                        </div>
-                        <button type="submit" id='l' className="btn btn-primary">
-                            LOGIN
-                        </button>
-                    </form>
-                </div>
+      <div id="www">
+        <div className="form-containers">
+          <form onSubmit={handleSubmit}>
+            <h4 className="title">LOGIN HERE</h4>
+            <div className="mb-3">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="form-control"
+                placeholder="Enter Your Email"
+                required
+              />
             </div>
-        </>
-    );
-}
+            <div className="mb-3">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="form-control"
+                placeholder="Enter Your Password"
+                required
+              />
+            </div>
+            <button type="submit" id="l" className="btn btn-primary">
+              LOGIN
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default Login;
