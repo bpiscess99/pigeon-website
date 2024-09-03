@@ -3,10 +3,13 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
-import { Avatar, Card } from "antd";
-import { Button, Image } from "react-bootstrap";
+import { Avatar, Card, Tag } from "antd";
+import { Button, Container, Image } from "react-bootstrap";
+import { Table } from "antd";
 const Clubs = () => {
   const [clubs, setClubs] = useState([]);
+  const [isTabular, setIsTabular] = useState();
+  const [editingClub, setEditingClub] = useState(null);
 
   useEffect(() => {
     const fetchClubs = async () => {
@@ -24,9 +27,10 @@ const Clubs = () => {
     };
     fetchClubs();
   }, []);
-  const [editingClub, setEditingClub] = useState(null);
 
   const handleEditClick = (club) => {
+    console.log(club);
+
     setEditingClub(club); // Open the modal with the club data
   };
   const [deletingClub, setDeletingClub] = useState(null); // For deleting
@@ -70,50 +74,114 @@ const Clubs = () => {
     }
   };
 
+  const columns = [
+    {
+      title: "Club Name",
+      dataIndex: "cname",
+    },
+    {
+      title: "Club Owner",
+      dataIndex: "name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Date",
+      dataIndex: "createdAt",
+      render: (_) => {
+        return <Tag color="blue">{_.slice(0, 10)}</Tag>;
+      },
+    },
+    {
+      title: "Actions",
+      render: (_) => {
+        return (
+          <div className="d-flex gap-2">
+            <Button
+              size="sm"
+              variant="outline-info"
+              onClick={() => handleEditClick(_)}
+            >
+              <EditOutlined key="edit" /> Edit
+            </Button>
+            <Button
+              size="sm"
+              variant="outline-danger"
+              onClick={() => handleDeleteClick(_)}
+            >
+              <DeleteOutlined /> Delete
+            </Button>
+            ,
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
     <div>
-      <div className="d-flex flex-wrap justify-content-center gap-2 align-items-start">
-        {clubs.map((club) => (
-          <Card
-            key={club._id}
-            actions={[
-              <Button
-                size="sm"
-                variant="outline-info"
-                onClick={() => handleEditClick(club)}
-              >
-                <EditOutlined key="edit" /> Edit
-              </Button>,
-              <Button
-                size="sm"
-                variant="outline-danger"
-                onClick={() => handleDeleteClick(club)}
-              >
-                <DeleteOutlined /> Delete
-              </Button>,
-            ]}
-            style={{
-              width: 270,
-            }}
-          >
-            <Card.Meta
-              avatar={<Avatar src="/clubs.png" alt="club_image" />}
-              title={club.cname}
-              description={
-                <div>
-                  <h5>
-                    <span className="badge text-bg-info">{club.name}</span>
-                  </h5>
-                  <h6 className="d-flex flex-column">
-                    <Image src="/gmail.png" width={"25px"} />
-                    <strong>{club.email}</strong>{" "}
-                  </h6>
-                </div>
-              }
-            />
-          </Card>
-        ))}
-      </div>
+      <Container className="d-flex justify-content-between align-items-center px-3">
+        <h5>
+          total clubs <span className="badge text-bg-info">{clubs.length}</span>
+        </h5>
+        <Button
+          type="button"
+          variant="none"
+          onClick={() => setIsTabular((prevIsTabular) => !prevIsTabular)}
+        >
+          <Image src="/tabel.png" width={"25px"} height={"25px"} alt="_img" />
+        </Button>
+      </Container>
+      {isTabular ? (
+        <div className="d-flex flex-wrap justify-content-center gap-2 align-items-start">
+          {clubs.map((club) => (
+            <Card
+              key={club._id}
+              actions={[
+                <Button
+                  size="sm"
+                  variant="outline-info"
+                  onClick={() => handleEditClick(club)}
+                >
+                  <EditOutlined key="edit" /> Edit
+                </Button>,
+                <Button
+                  size="sm"
+                  variant="outline-danger"
+                  onClick={() => handleDeleteClick(club)}
+                >
+                  <DeleteOutlined /> Delete
+                </Button>,
+              ]}
+              style={{
+                width: 270,
+              }}
+            >
+              <Card.Meta
+                avatar={<Avatar src="/clubs.png" alt="club_image" />}
+                title={club.cname}
+                description={
+                  <div>
+                    <h5>
+                      <span className="badge text-bg-info">{club.name}</span>
+                    </h5>
+                    <h6 className="d-flex flex-column">
+                      <Image src="/gmail.png" width={"25px"} />
+                      <strong>{club.email}</strong>{" "}
+                    </h6>
+                  </div>
+                }
+              />
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <Container>
+          <Table columns={columns} dataSource={clubs} pagination={false} />;
+        </Container>
+      )}
 
       {editingClub && (
         <div

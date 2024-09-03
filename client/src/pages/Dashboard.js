@@ -1,29 +1,68 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Carousel } from "react-bootstrap";
+import { Carousel, Tab } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
+import { Select, Tag } from "antd";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
   const [clubs, setClubs] = useState([]);
+  const [results, setResults] = useState([]);
+  const [tournaments, setTournaments] = useState([]);
+  const [tournament, setTournament] = useState({});
+
+  const fetchClubs = async () => {
+    try {
+      const response = await axios.get("/api/v1/auth/clubs");
+      if (response.data.success) {
+        // Filter clubs to include only those with role 0
+        const filteredClubs = response.data.clubs.filter(
+          (club) => club.role === 0
+        );
+        setClubs(filteredClubs);
+      }
+    } catch (error) {
+      console.error("Error fetching clubs:", error);
+    }
+  };
+
+  const fetchResults = async () => {
+    try {
+      const response = await axios.get("/api/v1/allowners");
+      setResults(response.data);
+    } catch (error) {
+      console.error("Error fetching clubs:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchClubs = async () => {
-      try {
-        const response = await axios.get("/api/v1/auth/clubs");
-        if (response.data.success) {
-          // Filter clubs to include only those with role 0
-          const filteredClubs = response.data.clubs.filter(
-            (club) => club.role === 0
-          );
-          setClubs(filteredClubs);
-        }
-      } catch (error) {
-        console.error("Error fetching clubs:", error);
-      }
-    };
-
     fetchClubs();
+    fetchResults();
+    fetchTournaments();
   }, []);
+
+  const fetchTournaments = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/api/v1/tournaments/"
+      );
+      setTournaments(response.data.tournaments);
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
+  const handleTournamentChange = async (tournament) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/tournaments/:${tournament}`
+      );
+      setTournament(response.data.tournament);
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
 
   return (
     <>
@@ -69,46 +108,122 @@ const Dashboard = () => {
             </a>
           </div>
         </header>
-        <main className="mains">
-          {/* Hero Section */}
-          <section>
-            <Carousel id="heroCarousel">
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="assets/img/carousel1.jpeg"
-                  alt="First slide"
-                  data-aos="fade-in"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="assets/img/carousel2.jpeg"
-                  alt="Second slide"
-                  data-aos="fade-in"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="assets/img/carousel3.jpeg"
-                  alt="Third slide"
-                  data-aos="fade-in"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="assets/img/carousel4.jpeg"
-                  alt="Third slide"
-                  data-aos="fade-in"
-                />
-              </Carousel.Item>
-            </Carousel>
-          </section>
-          {/* /Hero Section */}
-          {/* About Section */}
+        <main className="main">
+          <Carousel interval={2000} id="heroCarousel">
+            <Carousel.Item>
+              <img
+                className="d-block w-100"
+                src="/1.jpg"
+                alt="First slide"
+                data-aos="fade-in"
+              />
+            </Carousel.Item>
+            <Carousel.Item>
+              <img
+                className="d-block w-100"
+                src="/2.jpg"
+                alt="Second slide"
+                data-aos="fade-in"
+              />
+            </Carousel.Item>
+            <Carousel.Item>
+              <img
+                className="d-block w-100"
+                src="/3.jpg"
+                alt="Third slide"
+                data-aos="fade-in"
+              />
+            </Carousel.Item>
+            <Carousel.Item>
+              <img
+                className="d-block w-100"
+                src="4.jpg"
+                alt="Fourth slide"
+                data-aos="fade-in"
+              />
+            </Carousel.Item>
+          </Carousel>
+          <div className="d-flex py-3 justify-content-center align-items-center flex-column">
+            <div className="px-3">
+              <div className=" me-3 d-flex align-items-center gap-3">
+                <Select
+                  className="w-100"
+                  type="text"
+                  name="tournament"
+                  size="large"
+                  placeholder="Select Tournament"
+                  onChange={handleTournamentChange}
+                >
+                  <Select.Option></Select.Option>
+                  {tournaments &&
+                    tournaments.map((_, index) => {
+                      return (
+                        <Select.Option key={index} value={_._id}>
+                          {_.tournamentName}
+                        </Select.Option>
+                      );
+                    })}
+                </Select>
+              </div>
+              <div>
+                <h5 style={{ marginTop: "7px" }}>
+                  {tournament.tournamentName}
+                </h5>
+                <span style={{ marginLeft: "7px" }}>
+                  - Start Time :{tournament.startTime}{" "}
+                </span>
+              </div>
+              <div>
+                <p className="lead">
+                  Total Pigeons: {tournament.numberOfPigeons}, helper pigeons :
+                  <strong> {tournament.helperPigeons} </strong> Is live :{" "}
+                  <Tag color="blue"> {tournament.status_} </Tag>,{" "}
+                </p>
+              </div>
+            </div>
+            <table className="results-table">
+              <thead>
+                <tr>
+                  <th>Sr No.</th>
+                  <th>Name</th>
+                  <th>Pigeons</th>
+                  <th>#1</th>
+                  <th>#2</th>
+                  <th>#3</th>
+                  <th>#4</th>
+                  <th>#5</th>
+                  <th>#6</th>
+                  <th>#7</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((result, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{result.name}</td>
+                    {result.pigeonsResults && (
+                      <>
+                        <td>{result.pigeonsResults.totalPigeons}</td>
+                        <td>{result.pigeonsResults.firstPigeonReturnTime}</td>
+                        <td>{result.pigeonsResults.secondPigeonReturnTime}</td>
+                        <td>{result.pigeonsResults.thirdPigeonReturnTime}</td>
+                        <td>{result.pigeonsResults.fourthPigeonReturnTime}</td>
+                        <td>{result.pigeonsResults.fifthPigeonReturnTime}</td>
+                        <td>{result.pigeonsResults.sixthPigeonReturnTime}</td>
+                        <td>{result.pigeonsResults.seventhPigeonReturnTime}</td>
+                        <td>
+                          <Tag color="orange">
+                            {result.pigeonsResults.total}
+                          </Tag>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>{" "}
+          </div>
 
           {/* Features Section */}
           <section id="feature" className="features section">
@@ -129,7 +244,7 @@ const Dashboard = () => {
                       <i className="bi bi-star" style={{ color: "#ffa76e" }} />
                       <h3>
                         <Link
-                          to={`/clubdetail/${club.slug}`}
+                          to={`/club/${club.slug}/tournaments`}
                           className="stretched-link"
                         >
                           {club.cname}

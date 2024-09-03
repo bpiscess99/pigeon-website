@@ -291,3 +291,40 @@ color-mix(in srgb, var(--default-color), transparent 90%);
   color: #e04622;
   font-size: 1.3rem;
 }
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+  text-align: left;
+}
+
+.results-table thead tr {
+  background-color: #f2f2f2;
+  color: #333;
+  text-align: center;
+  font-weight: bold;
+}
+
+.results-table th,
+.results-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+.results-table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.results-table tbody tr:nth-of-type(even) {
+  background-color: #f9f9f9;
+}
+
+.results-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.results-table td:last-child {
+  text-align: center;
+}

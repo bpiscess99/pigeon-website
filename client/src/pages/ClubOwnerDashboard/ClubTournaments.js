@@ -1,0 +1,132 @@
+import { Table, Tag } from "antd";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
+import toast from "react-hot-toast";
+
+const ClubTournaments = () => {
+  const [tournaments, setTournaments] = useState([]);
+  const fetchTournaments = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/api/v1/tournaments/"
+      );
+      setTournaments(response.data.tournaments);
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchTournaments();
+  }, []);
+  const columns = [
+    {
+      title: "Tournament",
+      dataIndex: "tournamentName",
+    },
+    {
+      title: "Category",
+      dataIndex: "category",
+    },
+    {
+      title: "Number Of Prizes",
+      dataIndex: "numberOfPrizes",
+    },
+    {
+      title: "Number Of Pigeons",
+      dataIndex: "numberOfPigeons",
+    },
+    {
+      title: "Start Date",
+      dataIndex: "startDate",
+      render: (_, { tags }) => {
+        const date = _.slice(0, 10);
+        return <Tag> {date}</Tag>;
+      },
+    },
+    {
+      title: "Start Time",
+      dataIndex: "startTime",
+    },
+    {
+      title: "Status",
+      dataIndex: "status_",
+      render: (_, { tags }) => {
+        const color = _.length <= 6 ? "red" : "blue";
+        return <Tag color={color}> {_}</Tag>;
+      },
+    },
+    {
+      title: "Tournament Information",
+      dataIndex: "tournamentInformation",
+    },
+    {
+      title: "Helper Pigeons",
+      dataIndex: "helperPigeons",
+    },
+    {
+      title: "Continue Days",
+      dataIndex: "continueDays",
+    },
+    {
+      title: "Number of Days",
+      dataIndex: "numberOfDays",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+    },
+    {
+      title: "Participating Loft",
+      dataIndex: "participatingLoft",
+      render: (_) => {
+        return _.join(" ");
+      },
+    },
+
+    {
+      title: "First Prize",
+      dataIndex: "prize1",
+    },
+    {
+      title: "2nd Prize",
+      dataIndex: "prize2",
+    },
+    {
+      title: "3rd Prize",
+      dataIndex: "prize3",
+    },
+    {
+      title: "4th Prize",
+      dataIndex: "prize4",
+    },
+
+    {
+      title: "5th Prize",
+      dataIndex: "prize5",
+    },
+    {
+      title: "Participating Loft",
+      dataIndex: "participatingLoft",
+      render: (_) => {
+        return _.join(" ");
+      },
+    },
+  ];
+
+  return (
+    <Container>
+      <Table
+        columns={columns}
+        scroll={{ x: 1300 }}
+        pagination={false}
+        dataSource={tournaments}
+        size="small"
+      />
+      ;
+    </Container>
+  );
+};
+
+export default ClubTournaments;

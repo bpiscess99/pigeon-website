@@ -7,7 +7,13 @@ const tournamentSchema = mongoose.Schema(
       required: [true, "club owner is required"],
       ref: "users",
     },
-
+    status: {
+      status: {
+        type: String,
+        enum: ["pending", "approved"],
+        default: "pending",
+      },
+    },
     image: {
       type: String,
     },

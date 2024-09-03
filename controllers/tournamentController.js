@@ -82,6 +82,8 @@ export const createTournament = async (req, res) => {
       prize4,
       prize5,
     });
+    console.log(participatingLoft);
+
     newTournament.club_owner = clubOwner._id;
     newTournament.save();
 

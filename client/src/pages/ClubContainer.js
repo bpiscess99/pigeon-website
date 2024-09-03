@@ -5,9 +5,9 @@ import { NavLink, Outlet } from "react-router-dom";
 const ClubContainer = () => {
   return (
     <div className="py-3">
-      <Container>
+      <Container className="d-flex justify-content-between">
         <Breadcrumb
-          className="px-2 pb-2"
+          className="px-1 pb-2"
           items={[
             {
               title: "Dashboard",

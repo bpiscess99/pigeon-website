@@ -23,7 +23,7 @@ const Createclub = () => {
       });
       if (res.data.success) {
         toast.success(res.data.message);
-        navigate("/");
+        navigate("/clubs");
       } else {
         toast.error(res.data.message);
       }
@@ -32,25 +32,6 @@ const Createclub = () => {
       toast.error("Something Went wrong");
     }
   };
-
-  const [clubs, setClubs] = useState([]);
-
-  useEffect(() => {
-    const fetchClubs = async () => {
-      try {
-        const response = await axios.get("/api/v1/auth/clubs");
-        if (response.data.success) {
-          const filteredClubs = response.data.clubs.filter(
-            (club) => club.role === 0
-          );
-          setClubs(filteredClubs);
-        }
-      } catch (error) {
-        console.error("Error fetching clubs:", error);
-      }
-    };
-    fetchClubs();
-  }, []);
 
   return (
     <div
