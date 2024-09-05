@@ -1,36 +1,18 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 import { Avatar, Card, Tag } from "antd";
 import { Button, Container, Image } from "react-bootstrap";
 import { Table } from "antd";
+import ClubsContext from "./Contexts/ClubsContext";
 const Clubs = () => {
-  const [clubs, setClubs] = useState([]);
+  const { clubs, setClubs } = useContext(ClubsContext);
   const [isTabular, setIsTabular] = useState();
   const [editingClub, setEditingClub] = useState(null);
 
-  useEffect(() => {
-    const fetchClubs = async () => {
-      try {
-        const response = await axios.get("/api/v1/auth/clubs");
-        if (response.data.success) {
-          const filteredClubs = response.data.clubs.filter(
-            (club) => club.role === 0
-          );
-          setClubs(filteredClubs);
-        }
-      } catch (error) {
-        console.error("Error fetching clubs:", error);
-      }
-    };
-    fetchClubs();
-  }, []);
-
   const handleEditClick = (club) => {
-    console.log(club);
-
     setEditingClub(club); // Open the modal with the club data
   };
   const [deletingClub, setDeletingClub] = useState(null); // For deleting
@@ -40,7 +22,10 @@ const Clubs = () => {
 
   const handleSave = async (id, updatedData) => {
     try {
-      const response = await axios.put(`/api/v1/auth/clubs/${id}`, updatedData);
+      const response = await axios.put(
+        `http://localhost:8080/api/v1/auth/clubs/${id}`,
+        updatedData
+      );
       if (response.data.success) {
         toast.success(response.data.message);
         setClubs(
@@ -59,7 +44,7 @@ const Clubs = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `/api/v1/auth/clubs/${deletingClub._id}`
+        `http://localhost:8080/api/v1/auth/clubs/${deletingClub._id}`
       );
       if (response.data.success) {
         toast.success(response.data.message);
@@ -179,7 +164,12 @@ const Clubs = () => {
         </div>
       ) : (
         <Container>
-          <Table columns={columns} dataSource={clubs} pagination={false} />;
+          <Table
+            columns={columns}
+            rowKey={(row) => row.id || row._id}
+            dataSource={clubs}
+            pagination={false}
+          />
         </Container>
       )}
 

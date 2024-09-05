@@ -3,6 +3,7 @@ import crypto from "crypto";
 import multer from "multer";
 import path from "path";
 import Clubsmodal from "../models/Clubsmodal.js";
+import Pigeonwnermodal from "../models/Pigeonwnermodal.js";
 import { log } from "console";
 
 const storage = multer.diskStorage({
@@ -43,17 +44,13 @@ export const createTournament = async (req, res) => {
       prize4,
       prize5,
     } = req.body;
-
     if (!owner_id || !tournamentName || !startDate) {
       return res.status(400).json({
         success: false,
         message: "owner_id, tournamentName, startDate are required",
       });
     }
-
-    console.log();
     const clubOwner = await Clubsmodal.findById({ _id: owner_id });
-
     if (!clubOwner) {
       return res.status(400).json({
         message: `Club owner not found with ${owner_id}`,
@@ -82,11 +79,8 @@ export const createTournament = async (req, res) => {
       prize4,
       prize5,
     });
-    console.log(participatingLoft);
-
     newTournament.club_owner = clubOwner._id;
     newTournament.save();
-
     return res
       .status(201)
       .json({ success: true, newTournament, message: "tournament is created" });
@@ -187,6 +181,26 @@ export const updateTournament = async (req, res) => {
       message: "Error",
       error: error.message,
     });
+  }
+};
+
+export const getTournamentsOfClubs = async (req, res) => {
+  try {
+    const { club_id } = req.params;
+
+    const clubTournaments = await Tournament.find({
+      club_owner: club_id.slice(1),
+    });
+    res.status(200).json({
+      success: true,
+      msg: "Tournaments",
+      clubTournaments,
+    });
+  } catch (error) {
+    console.error("Error: ", error.message);
+    res
+      .status(500)
+      .json({ success: false, error: "Error", message: error.message });
   }
 };
 

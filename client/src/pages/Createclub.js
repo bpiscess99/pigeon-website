@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { Button } from "react-bootstrap";
+import ClubsContext from "./Contexts/ClubsContext";
 
 const Createclub = () => {
   const [email, setEmail] = useState("");
@@ -10,25 +11,34 @@ const Createclub = () => {
   const [cname, setcName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { setClubs } = useContext(ClubsContext);
 
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/auth/register", {
-        email,
-        name,
-        cname,
-        password,
-        role: 0,
-      });
+      const res = await axios.post(
+        "http://localhost:8080/api/v1/auth/register",
+        {
+          email,
+          name,
+          cname,
+          password,
+          role: 0,
+        }
+      );
       if (res.data.success) {
         toast.success(res.data.message);
-        navigate("/clubs");
+        setTimeout(() => {
+          navigate("/clubs");
+          setClubs((prev) => {
+            return [...prev, res.data.user];
+          });
+        }, 3000);
       } else {
         toast.error(res.data.message);
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       toast.error("Something Went wrong");
     }
   };

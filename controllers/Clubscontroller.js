@@ -3,7 +3,6 @@ import slugify from "slugify";
 import Clubsmodal from "../models/Clubsmodal.js";
 import { comparepassword, hashpassword } from "../helpers/Clubshelper.js";
 import jsonwebtoken from "jsonwebtoken";
-import { message } from "antd";
 
 export const registercontroller = async (req, res) => {
   try {

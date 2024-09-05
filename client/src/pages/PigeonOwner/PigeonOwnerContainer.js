@@ -1,25 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import React, { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import axios from "axios";
 import { Button, Table } from "react-bootstrap";
+import { Tag } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const PigeonOwnerContainer = () => {
   const [owners, setOwners] = useState([]);
-
-  const fetchOwners = async () => {
-    try {
-      const response = await axios.get("/api/v1/allowners"); // Adjust the URL to your backend endpoint
-      setOwners(response.data);
-    } catch (error) {
-      console.error("Error fetching owners:", error);
-    }
-  };
-  useEffect(() => {
-    fetchOwners();
-  }, []);
-
+  const [tournaments, setTournaments] = useState([]);
   const [editingOwner, setEditingOwner] = useState(null);
   const [deletingOwner, setDeletingOwner] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+  const slug = JSON.parse(localStorage.getItem("user")).slug;
+  const state = useLocation().state;
+
+  console.log(state, "--------");
 
   const handleEditClick = (owner) => {
     setEditingOwner(owner); // Open the modal with owner data
@@ -27,7 +23,10 @@ const PigeonOwnerContainer = () => {
 
   const handleSave = async (id, updatedData) => {
     try {
-      const response = await axios.put(`/api/v1/owners/${id}`, updatedData);
+      const response = await axios.put(
+        `http://localhost:8080/api/v1/owners/${id}`,
+        updatedData
+      );
       if (response.data.success) {
         toast.success(response.data.message);
         setOwners(
@@ -53,7 +52,7 @@ const PigeonOwnerContainer = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(`
-        /api/v1/owners/${deletingOwner._id}`);
+        http://localhost:8080/api/v1/owners/${deletingOwner._id}`);
       if (response.data.success) {
         toast.success(response.data.message);
         setOwners(owners.filter((owner) => owner._id !== deletingOwner._id)); // Remove the deleted owner from the list
@@ -67,15 +66,57 @@ const PigeonOwnerContainer = () => {
     }
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [storesPerPage] = useState(20); // Number of stores per
-  const indexOfLastStore = currentPage * storesPerPage;
-  const indexOfFirstStore = indexOfLastStore - storesPerPage;
-  const currentStores = owners.slice(indexOfFirstStore, indexOfLastStore);
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const fetchClubTournaments = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/tournaments/club/:${user.id}`
+      );
+      if (response.data.success) {
+        setTournaments(response.data.clubTournaments);
+        if (response.data.clubTournaments.length > 0) {
+          fetchTournamentPigeons(response.data.clubTournaments[0]._id);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching clubs:", error);
+    }
+  };
+
+  const fetchTournamentPigeons = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/pigeonOwners/:${id}`
+      );
+      if (response.data.success) {
+        setOwners(response.data.pigeonOwners);
+      }
+    } catch (error) {
+      console.error("Error fetching clubs:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchClubTournaments();
+  }, []);
 
   return (
-    <div id="zooma">
+    <div>
+      <div className="d-flex gap-2">
+        {tournaments &&
+          tournaments.map((_, index) => {
+            return (
+              <Button
+                size="sm"
+                variant={`${index === 0 ? "info" : "outline-info"}`}
+                key={index}
+                onClick={(e) => fetchTournamentPigeons(_._id)}
+              >
+                {_.tournamentName}
+              </Button>
+            );
+          })}
+      </div>
+
       <Table responsive>
         <thead>
           <tr>
@@ -84,71 +125,93 @@ const PigeonOwnerContainer = () => {
             <th>Name</th>
             <th>Contacts</th>
             <th>City</th>
-            <th colSpan={2}>Actions</th>
+            <th>Results</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {currentStores.map((owner, index) => (
-            <tr key={owner._id}>
-              <td>{index + 1 + (currentPage - 1) * storesPerPage}</td>
-              <td>
-                {owner.image ? (
+          {owners.length > 0 &&
+            owners.map((owner, index) => (
+              <tr key={owner._id}>
+                <td>{index + 1}</td>
+                <td>
                   <img
                     src={`/uploads/${owner.image}`}
                     alt={owner.name}
                     width="40"
                     height="40"
                   />
-                ) : (
-                  "No image"
-                )}
-              </td>
-              <td>{owner.name}</td>
-              <td>{owner.contacts}</td>
-              <td>{owner.city}</td>
-              <td>
-                <Button
-                  size="sm"
-                  variant="outline-primary"
-                  onClick={() => handleEditClick(owner)}
-                >
-                  Edit
-                </Button>
-              </td>
-              <td>
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={() => handleDeleteClick(owner)}
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
+                </td>
+                <td>{owner.name}</td>
+                <td>
+                  <Tag color="orange">{owner.contacts}</Tag>
+                </td>
+                <td>{owner.city}</td>
+                <td>
+                  <div className="d-flex flex-column gap-1">
+                    {owner.pigeonsResults !== undefined ? (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => {
+                          navigate(`/club/${slug}/pigeonOwnerResultUpdate`, {
+                            state: { owner },
+                          });
+                        }}
+                      >
+                        Update
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline-primary"
+                        onClick={() => {
+                          navigate(`/club/${slug}/pigeonResultForm`, {
+                            state: { owner },
+                          });
+                        }}
+                      >
+                        Add
+                      </Button>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="outline-info"
+                      onClick={() => {
+                        navigate(`/club/${slug}/pigeonOwnerResults`, {
+                          state: { owner },
+                        });
+                      }}
+                    >
+                      View
+                    </Button>
+                  </div>
+                </td>
+
+                <td>
+                  <div className="d-flex flex-column gap-1">
+                    <Button
+                      size="sm"
+                      variant="outline-primary"
+                      onClick={() => handleEditClick(owner)}
+                    >
+                      Edit
+                    </Button>
+
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => handleDeleteClick(owner)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </Table>
-      <nav>
-        <ul className="pagination justify-content-center">
-          {[...Array(Math.ceil(owners.length / storesPerPage)).keys()].map(
-            (number) => (
-              <li
-                key={number}
-                className={`page-item ${
-                  currentPage === number + 1 ? "active" : ""
-                }`}
-              >
-                <button
-                  onClick={() => paginate(number + 1)}
-                  className="page-link"
-                >
-                  {number + 1}
-                </button>
-              </li>
-            )
-          )}
-        </ul>
-      </nav>
+
       {editingOwner && (
         <div className="modal show d-block" tabIndex="-1" role="dialog">
           <div className="modal-dialog" role="document">
@@ -215,7 +278,6 @@ const PigeonOwnerContainer = () => {
           </div>
         </div>
       )}
-
       {/* Delete Confirmation Modal */}
       {deletingOwner && (
         <div className="modal show d-block" tabIndex="-1" role="dialog">

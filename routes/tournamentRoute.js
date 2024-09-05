@@ -5,11 +5,13 @@ import {
   getAllTournaments,
   getTournament,
   updateTournament,
+  getTournamentsOfClubs,
   uploadImage,
 } from "../controllers/tournamentController.js";
 // import { requiresingnin } from "../middlewares/Authmiddleware.js";
 
 const router = express.Router();
+router.route("/club/:club_id").get(getTournamentsOfClubs);
 
 router.route("/").get(getAllTournaments).post(createTournament);
 

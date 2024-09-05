@@ -36,6 +36,16 @@ function NavbarComponent() {
                 <NavLink to={"/tournaments/tournamentForm"}>Create Tournament</NavLink>
               </NavDropdown.Item> 
             </NavDropdown>
+            <NavDropdown title="Banners">
+              <NavDropdown.Item>
+                <NavLink to={"/banners"}>Banners</NavLink>
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item>
+                <NavLink to={"/banners/bannerForm"}>Create Banner</NavLink>
+              </NavDropdown.Item> 
+            </NavDropdown>
+
           </Nav>
         </Navbar.Collapse>
       </Container>

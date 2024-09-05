@@ -44,24 +44,19 @@ const ClubDashboardContainer = () => {
         },
       ],
     },
-    {
-      key: "3",
-      label: "Results",
-      children: [
-        {
-          key: `/club/${slug}/pigeonResultForm`,
-          label: "Create Results",
-        },
-        {
-          type: "divider",
-        },
-        // {
-        //   // key: `/club/${slug}/pigeonOwnerForm`,
-        //   key: `/club/${slug}/pigeonResultForm`,
-        //   label: "Create Results",
-        // },
-      ],
-    },
+    // {
+    //   key: "3",
+    //   label: "Results",
+    //   children: [
+    //     {
+    //       key: `/club/${slug}/pigeonResultForm`,
+    //       label: "Create Results",
+    //     },
+    //     {
+    //       type: "divider",
+    //     },
+    //   ],
+    // },
   ];
 
   return (

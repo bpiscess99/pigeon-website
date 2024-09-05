@@ -1,23 +1,38 @@
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import Select from "react-select";
-import { message, Popconfirm } from "antd";
-
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
-];
+import { message, Popconfirm, Select, Tag } from "antd";
 
 const TournamentDetails = () => {
   const navigate = useNavigate();
   const { tournament } = useLocation().state;
   const [tournamentDetails, setTournamentDetails] = useState(tournament);
   const { id } = useParams();
+
+  const [owners, setOwners] = useState([]);
+  const fetchOwners = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/api/v1/allowners"
+      ); // Adjust the URL to your backend endpoint
+      const options = response.data.map((_, index) => {
+        return {
+          label: _.name,
+          value: _.name,
+        };
+      });
+      setOwners(options);
+    } catch (error) {
+      console.error("Error fetching owners:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOwners();
+  }, []);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -28,18 +43,16 @@ const TournamentDetails = () => {
       };
     });
   };
-  const handleParticipatingLofts = (e) => {
-    const lofts = [];
-    e.forEach((_) => {
-      lofts.push(_.value);
-    });
-    setTournamentDetails((prevState) => {
+
+  const handleLoftChange = (value) => {
+    setTournamentDetails((prevTournament) => {
       return {
-        ...prevState,
-        participatingLoft: lofts,
+        ...prevTournament,
+        participatingLoft: value,
       };
     });
   };
+
   const handleDeleteTournament = async () => {
     console.log("delete tournament");
     let response;
@@ -50,7 +63,7 @@ const TournamentDetails = () => {
       console.log(response);
 
       if (response.status === 200) {
-        toast.success(response.data.message);
+        toast.success(`${response.data.message} deleted successfully!`);
         setTimeout(() => {
           navigate("/tournaments");
         }, [3000]);
@@ -72,7 +85,7 @@ const TournamentDetails = () => {
       console.log(response);
 
       if (response.status === 200) {
-        toast.success(response.data.message);
+        toast.success(`${response.data.message} edited successfully!`);
         setTimeout(() => {
           navigate("/tournaments");
         }, [3000]);
@@ -256,11 +269,13 @@ const TournamentDetails = () => {
           <Form.Group className="w-100">
             <Form.Label className="label-size">participatingLoft</Form.Label>
             <Select
-              options={options}
-              name="participatingLoft"
-              type="text"
-              isMulti
-              onChange={handleParticipatingLofts}
+              className="w-50 px-2"
+              mode="multiple"
+              size={"large"}
+              placeholder="Please select"
+              onChange={handleLoftChange}
+              options={owners}
+              defaultValue={tournamentDetails.participatingLoft}
             />
           </Form.Group>
 
@@ -353,20 +368,11 @@ const TournamentDetails = () => {
           </Form.Group>
         </Container>
         <div className="d-flex gap-2 py-2">
-          <Popconfirm
-            title="Update the task"
-            description="Are you sure to update this task?"
-            okText="Yes"
-            cancelText="No"
-            onCancel={() => message.info("Cancle update")}
-            onConfirm={(e) => {
-              handleFormChange(e);
-              message.success("update tournament");
-            }}
-          >
-            <Button variant="outline-primary">Update Tournament</Button>
-            <Toaster />
-          </Popconfirm>
+          <Button variant="outline-primary" type="submit">
+            {" "}
+            Update Tournament
+          </Button>
+          <Toaster />
           <Popconfirm
             title="Delete the task"
             description="Are you sure to delete this task?"

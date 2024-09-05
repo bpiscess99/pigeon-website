@@ -1,13 +1,12 @@
-import { Modal, Select, Tag } from "antd";
+// import { Select } from "antd";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import { Button, ButtonGroup, Form } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const TournamentForm = () => {
   const navigate = useNavigate();
-
   const user = JSON.parse(localStorage.getItem("user"));
   const [tournamentDetails, setTournamentDetails] = useState({
     owner_id: user.id,
@@ -32,42 +31,27 @@ const TournamentForm = () => {
     prize4: "",
     prize5: "",
   });
-
-  const [open, setOpen] = useState(false);
-  const showModal = () => {
-    setOpen(true);
-  };
-  const hideModal = () => {
-    setOpen(false);
-  };
-
-  const [owner, setOwner] = useState({
-    ownerName: "",
-    contacts: "",
-    city: "",
-    image: "",
-  });
-  const handleOwnerFormChange = (e) => {
-    const { name, value } = e.target;
-    setOwner((prevTournament) => {
-      return {
-        ...prevTournament,
-        [name]: value,
-      };
-    });
+  const [owners, setOwners] = useState([]);
+  const fetchOwners = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/api/v1/allowners"
+      );
+      const options = response.data.map((_, index) => {
+        return {
+          label: _.name,
+          value: _.name,
+        };
+      });
+      setOwners(options);
+    } catch (error) {
+      console.error("Error fetching owners:", error);
+    }
   };
 
-  const handleSubmitPegionForm = async (event) => {
-    event.preventDefault();
-    setTournamentDetails((prevTournament) => {
-      return {
-        ...prevTournament,
-        participatingLoft: [...prevTournament.participatingLoft, owner],
-      };
-    });
-    setOpen(false);
-  };
-  console.log(tournamentDetails.participatingLoft);
+  useEffect(() => {
+    fetchOwners();
+  }, []);
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -105,6 +89,15 @@ const TournamentForm = () => {
       toast.error(error.response.data.message);
     }
   };
+
+  // const handleLoftChange = (value) => {
+  //   setTournamentDetails((prevTournament) => {
+  //     return {
+  //       ...prevTournament,
+  //       participatingLoft: value,
+  //     };
+  //   });
+  // };
 
   return (
     <>
@@ -259,6 +252,7 @@ const TournamentForm = () => {
           <Form.Select
             name="status_"
             type="text"
+            size="sm"
             onChange={handleFormChange}
             value={tournamentDetails.status_}
           >
@@ -272,86 +266,17 @@ const TournamentForm = () => {
           </Form.Select>
         </Form.Group>
 
-        <Form.Group className="w-100">
+        {/* <Form.Group className="w-100">
           <Form.Label className="label-size">participatingLoft</Form.Label>
-
-          <Button
-            type="primary"
-            variant="outline-primary"
-            size="sm"
-            onClick={showModal}
-          >
-            Modal
-          </Button>
-          {/* 
-          
-            **************************                            model
-          
-          */}
-          <Modal
-            title="Add Pigeon Owner"
-            open={open}
-            onOk={handleSubmitPegionForm}
-            onCancel={hideModal}
-            cancelText="Cancel"
-          >
-            <form
-              className="row g-3"
-              // onSubmit={handleSubmit}
-            >
-              <div className="me-3 d-flex align-items-center gap-3">
-                <label>Name</label>
-                <input
-                  className="aaq form-control"
-                  type="text"
-                  name="ownerName"
-                  placeholder="Name"
-                  required
-                  onChange={handleOwnerFormChange}
-                />
-              </div>
-
-              <div className=" me-3 d-flex align-items-center gap-3">
-                <label>Phone</label>
-                <input
-                  className={`aaq form-control`}
-                  type="text"
-                  name="contacts"
-                  placeholder="Contact No."
-                  value={owner.contacts}
-                  onChange={handleOwnerFormChange}
-                  required
-                />
-              </div>
-              <div className="me-3 d-flex align-items-center gap-3">
-                <label>City</label>
-
-                <input
-                  className="aaq form-control"
-                  type="text"
-                  id="city"
-                  name="city"
-                  onChange={handleOwnerFormChange}
-                  placeholder="Enter City"
-                  required
-                />
-              </div>
-              <div className="col-6 me-3" id="hyy">
-                <input
-                  type="file"
-                  placeholder="Upload image"
-                  name="image"
-                  accept="image/*"
-                  onChange={handleOwnerFormChange}
-                />
-              </div>
-            </form>
-          </Modal>
-          {tournamentDetails.participatingLoft &&
-            tournamentDetails.participatingLoft.map((_, index) => (
-              <Tag color="blue">{_.ownerName}</Tag>
-            ))}
-        </Form.Group>
+          <Select
+            className="w-50 px-2"
+            mode="multiple"
+            size={"large"}
+            placeholder="Please select"
+            onChange={handleLoftChange}
+            options={owners}
+          />
+        </Form.Group> */}
 
         <Form.Group className="w-100">
           <Form.Label className="label-size"> Type </Form.Label>

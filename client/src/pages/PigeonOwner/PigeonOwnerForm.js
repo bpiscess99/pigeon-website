@@ -10,9 +10,10 @@ const PigeonOwnerForm = () => {
   const formRef = useRef(null);
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
-  const [tournaments, setTournaments] = useState([]);
   const [owners, setOwners] = useState([]);
   const slug = JSON.parse(localStorage.getItem("user")).slug;
+  const [tournaments, setTournaments] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,7 +27,7 @@ const PigeonOwnerForm = () => {
     }
     formData.append("tournament", event.target.tournament.value);
     try {
-      const response = await fetch("/api/v1/owner", {
+      const response = await fetch("http://localhost:8080/api/v1/owner", {
         method: "POST",
         body: formData,
       });
@@ -49,7 +50,9 @@ const PigeonOwnerForm = () => {
 
   const fetchOwners = async () => {
     try {
-      const response = await axios.get("/api/v1/allowners"); // Adjust the URL to your backend endpoint
+      const response = await axios.get(
+        "http://localhost:8080/api/v1/allowners"
+      ); // Adjust the URL to your backend endpoint
       setOwners(response.data);
     } catch (error) {
       console.error("Error fetching owners:", error);
@@ -70,19 +73,20 @@ const PigeonOwnerForm = () => {
     setImage(event.target.files[0]);
   };
 
-  const fetchTournaments = async () => {
+  const fetchClubTournaments = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/v1/tournaments/"
+        `http://localhost:8080/api/v1/tournaments/club/:${user.id}`
       );
-      setTournaments(response.data.tournaments);
+      if (response.data.success) {
+        setTournaments(response.data.clubTournaments);
+      }
     } catch (error) {
-      console.log(error);
-      toast.error(error);
+      console.error("Error fetching clubs:", error);
     }
   };
   useEffect(() => {
-    fetchTournaments();
+    fetchClubTournaments();
   }, []);
 
   return (

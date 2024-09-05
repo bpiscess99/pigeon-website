@@ -1,15 +1,19 @@
-import { Select } from "antd";
+import { Select, Tag, TimePicker } from "antd";
 import axios from "axios";
 import React from "react";
-import { useEffect } from "react";
+
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import toast, { Toaster } from "react-hot-toast";
-// import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { useLocation, useNavigate } from "react-router-dom";
+dayjs.extend(customParseFormat);
 
 const PigeonResultsForm = () => {
+  const { owner } = useLocation().state;
   const [resultsForm, setResultsForm] = useState({
-    pigeonOwnerId: "",
+    pigeonOwnerId: owner && owner._id,
     totalPigeons: Number,
     firstPigeonReturnTime: "",
     secondPigeonReturnTime: "",
@@ -20,29 +24,8 @@ const PigeonResultsForm = () => {
     seventhPigeonReturnTime: "",
     total: "",
   });
-  //   const navigate = useNavigate();
-  const [pigeonOwners, setPigeonOwners] = useState([]);
-  const handlePegionOwner = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/v1/allowners/"
-      );
-      setPigeonOwners(response.data);
-    } catch (error) {
-      console.log(error);
-      toast.error(error);
-    }
-  };
-  const options = pigeonOwners.map((_) => {
-    return {
-      value: _._id,
-      label: _.name,
-    };
-  });
-  useEffect(() => {
-    handlePegionOwner();
-  }, []);
-
+  const slug = JSON.parse(localStorage.getItem("user")).slug;
+  const navigate = useNavigate();
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setResultsForm((prevResultsForm) => {
@@ -54,8 +37,6 @@ const PigeonResultsForm = () => {
   };
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(resultsForm);
-
     try {
       const response = await axios.patch(
         "http://localhost:8080/api/v1/createResults/",
@@ -64,41 +45,26 @@ const PigeonResultsForm = () => {
       console.log(response);
       if (response.status === 200) {
         toast.success(response.data.msg);
+        setTimeout(() => {
+          navigate(`/club/${slug}/pigeonOwners`);
+        }, 3000);
       }
     } catch (error) {
       console.log(error.response.data);
       toast.error(error.response.data.message);
     }
   };
-  const handlePigeonChange = (id) => {
-    setResultsForm((prevState) => {
-      return {
-        ...prevState,
-        pigeonOwnerId: id,
-      };
-    });
-  };
+  console.log(owner.pigeonsResults);
 
   return (
     <div>
+      <h5 className="ps-3">
+        Pigeon Owner - <Tag color="lightblue">{owner && owner.name}</Tag>
+      </h5>
       <Form
-        className="p-3 d-flex flex-column align-items-start"
+        className="p-3 d-flex gap-2 flex-column align-items-start"
         onSubmit={handleFormSubmit}
       >
-        <Form.Group className="w-50">
-          <span className="star">*</span>
-          <Form.Label className="label-size">Pigeon Owners</Form.Label>
-          <Select
-            className="w-50"
-            name="pigeonOwnerId"
-            placeholder="Please select"
-            onChange={handlePigeonChange}
-            options={options}
-            type="text"
-            value={resultsForm.pigeonOwnerId}
-          />
-        </Form.Group>
-
         <Form.Group className="w-50">
           <Form.Label className="label-size">Total Pigeons </Form.Label>
           <Form.Control
@@ -110,99 +76,148 @@ const PigeonResultsForm = () => {
             onChange={handleFormChange}
           />
         </Form.Group>
-        <Form.Group className="w-50">
-          <Form.Label className="label-size">pigeon 1 return time</Form.Label>
-          <Form.Control
-            placeholder="pigeon 1 return time"
+        <div className="d-flex gap-2 w-75">
+          <label>#1 Pigeon</label>
+          <TimePicker
             name="firstPigeonReturnTime"
-            type="time"
-            size="sm"
-            value={resultsForm.firstPigeonReturnTime}
-            onChange={handleFormChange}
+            placeholder="#1 Pigeon"
+            className="w-25"
+            onChange={(time, timeString) =>
+              setResultsForm((prev) => {
+                return {
+                  ...prev,
+                  firstPigeonReturnTime: timeString,
+                };
+              })
+            }
+            defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
           />
-        </Form.Group>
-        <Form.Group className="w-50">
-          <Form.Label className="label-size">pigeon 2 return time</Form.Label>
-          <Form.Control
-            placeholder="pigeon 2 return time"
+        </div>
+        <div className="d-flex gap-2 w-75">
+          <label>#2 Pigeon</label>
+          <TimePicker
             name="secondPigeonReturnTime"
-            type="time"
-            size="sm"
-            value={resultsForm.secondPigeonReturnTime}
-            onChange={handleFormChange}
+            placeholder="#2 Pigeon"
+            className="w-25"
+            onChange={(time, timeString) =>
+              setResultsForm((prev) => {
+                return {
+                  ...prev,
+                  secondPigeonReturnTime: timeString,
+                };
+              })
+            }
+            defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
           />
-        </Form.Group>
-        <Form.Group className="w-50">
-          <Form.Label className="label-size">pigeon 3 return time</Form.Label>
-          <Form.Control
-            placeholder="pigeon 3 return time"
+        </div>
+        <div className="d-flex gap-2 w-75">
+          <label>#3 Pigeon</label>
+          <TimePicker
             name="thirdPigeonReturnTime"
-            size="sm"
-            type="time"
-            value={resultsForm.thirdPigeonReturnTime}
-            onChange={handleFormChange}
+            placeholder="#3 Pigeon"
+            className="w-25"
+            onChange={(time, timeString) =>
+              setResultsForm((prev) => {
+                return {
+                  ...prev,
+                  thirdPigeonReturnTime: timeString,
+                };
+              })
+            }
+            defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
           />
-        </Form.Group>
-        <Form.Group className="w-50">
-          <Form.Label className="label-size">pigeon 4 return time</Form.Label>
-          <Form.Control
-            placeholder="pigeon 4 return time"
+        </div>
+        <div className="d-flex gap-2 w-75">
+          <label>#4 Pigeon</label>
+          <TimePicker
             name="fourthPigeonReturnTime"
-            size="sm"
-            type="time"
-            value={resultsForm.fourthPigeonReturnTime}
-            onChange={handleFormChange}
+            placeholder="#4 Pigeon"
+            className="w-25"
+            onChange={(time, timeString) =>
+              setResultsForm((prev) => {
+                return {
+                  ...prev,
+                  fourthPigeonReturnTime: timeString,
+                };
+              })
+            }
+            defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
           />
-        </Form.Group>
-        <Form.Group className="w-50">
-          <Form.Label className="label-size">pigeon 5 return time</Form.Label>
-          <Form.Control
-            placeholder="pigeon 5 return time"
-            size="sm"
+        </div>
+        <div className="d-flex gap-2 w-75">
+          <label>#5 Pigeon</label>
+          <TimePicker
             name="fifthPigeonReturnTime"
-            type="time"
-            value={resultsForm.fifthPigeonReturnTime}
-            onChange={handleFormChange}
+            placeholder="#5 Pigeon"
+            className="w-25"
+            onChange={(time, timeString) =>
+              setResultsForm((prev) => {
+                return {
+                  ...prev,
+                  fifthPigeonReturnTime: timeString,
+                };
+              })
+            }
+            defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
           />
-        </Form.Group>
-
-        <Form.Group className="w-50">
-          <Form.Label className="label-size">pigeon 6 return time</Form.Label>
-          <Form.Control
-            placeholder="pigeon 6 return time"
-            size="sm"
+        </div>
+        <div className="d-flex gap-2 w-75">
+          <label>#6 Pigeon</label>
+          <TimePicker
             name="sixthPigeonReturnTime"
-            type="time"
-            value={resultsForm.sixthPigeonReturnTime}
-            onChange={handleFormChange}
+            placeholder="#6 Pigeon"
+            className="w-25"
+            onChange={(time, timeString) =>
+              setResultsForm((prev) => {
+                return {
+                  ...prev,
+                  sixthPigeonReturnTime: timeString,
+                };
+              })
+            }
+            defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
           />
-        </Form.Group>
-        <Form.Group className="w-50">
-          <Form.Label className="label-size">pigeon 7 return time</Form.Label>
-          <Form.Control
-            placeholder="pigeon 7 return time"
+        </div>
+        <div className="d-flex gap-2 w-75">
+          <label>#7 Pigeon</label>
+          <TimePicker
             name="seventhPigeonReturnTime"
-            size="sm"
-            type="time"
-            value={resultsForm.seventhPigeonReturnTime}
-            onChange={handleFormChange}
+            placeholder="#7 Pigeon"
+            className="w-25"
+            onChange={(time, timeString) =>
+              setResultsForm((prev) => {
+                return {
+                  ...prev,
+                  seventhPigeonReturnTime: timeString,
+                };
+              })
+            }
+            defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
           />
-        </Form.Group>
-        <Form.Group className="w-50">
-          <Form.Label className="label-size">Total</Form.Label>
-          <Form.Control
-            placeholder="total time"
+        </div>
+        <div className="d-flex gap-2 w-75">
+          <label>Total Time</label>
+          <TimePicker
             name="total"
-            size="sm"
-            type="time"
-            value={resultsForm.total}
-            onChange={handleFormChange}
+            placeholder="Total Time"
+            className="w-25"
+            onChange={(time, timeString) =>
+              setResultsForm((prev) => {
+                return {
+                  ...prev,
+                  total: timeString,
+                };
+              })
+            }
+            defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
           />
-        </Form.Group>
+        </div>
+
         <Button
-          className="mt-3"
+          className="w-25 mt-3"
           variant="outline-primary"
           type="submit"
+          size="sm"
           disabled={!resultsForm.pigeonOwnerId}
         >
           Submit

@@ -18,6 +18,28 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+export const getPigeonOwnersOfTournament = async (req, res) => {
+  try {
+    const { tournamentId } = req.params;
+
+    const pigeonOwners = await Pigeonwnermodal.find({
+      tournament: tournamentId.slice(1),
+    });
+    console.log(pigeonOwners);
+
+    res.status(200).json({
+      success: true,
+      msg: "Pigeon Data",
+      pigeonOwners,
+    });
+  } catch (error) {
+    console.error("Error: ", error.message);
+    res
+      .status(500)
+      .json({ success: false, error: "Error", message: error.message });
+  }
+};
+
 // Create employee with file upload
 export const createOwner = async (req, res) => {
   try {

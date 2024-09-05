@@ -1,28 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {  Button, Container, Image } from 'react-bootstrap';
-import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { Avatar, Card, message, Popconfirm, Table, Tag } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import TournamentContext from './Contexts/TournamentContext';
 
 const TournamentsContainer = () => {
-    const [tournaments, setTournaments] = useState([]);
+    const {tournaments}=useContext(TournamentContext)
     const [isTabular,setIsTabular]=useState(true);
-
-    const fetchTournaments = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/api/v1/tournaments/"
-        );
-        setTournaments(response.data.tournaments);
-      } catch (error) {
-        console.log(error);
-        toast.error(error);
-      }
-    };
-    useEffect(() => {
-      fetchTournaments();
-    }, []);
     const columns = [
       {
         title: "Tournament",
@@ -84,7 +69,13 @@ const TournamentsContainer = () => {
         title: "Participating Loft",
         dataIndex: "participatingLoft",
         render: (_) => {
-          return _.join(" ");
+          if (_) {
+            return _.map((_, index) => (
+              <Tag color="blue" key={index}>
+                {_}
+              </Tag>
+            ));
+          }
         },
       },
   
@@ -109,44 +100,26 @@ const TournamentsContainer = () => {
         title: "5th Prize",
         dataIndex: "prize5",
       },
-      {
-        title: "Participating Loft",
-        dataIndex: "participatingLoft",
-        render: (_) => {
-          return _.join(" ");
-        },
-      },
+
+    
       {
         title: "Actions",
         render :(_)=>{
-        //   return <div className="d-flex gap-2 py-2">
-        //   <Popconfirm
-        //     title="Update the task"
-        //     description="Are you sure to update this task?"
-        //     okText="Yes"
-        //     cancelText="No"
-        //     onCancel={() => message.info("Cancle update")}
-        //     onConfirm={(e) => {
-              
-        //     }}
-        //   >
-        //     <Button variant="outline-primary">Update Tournament</Button>
-        //     <Toaster />
-        //   </Popconfirm>
-        //   <Popconfirm
-        //     title="Delete the task"
-        //     description="Are you sure to delete this task?"
-        //     okText="Yes"
-        //     cancelText="No"
-        //     onCancel={() => message.info("Cancle delete")}
-        //     onConfirm={(e) => handleDeleteTournament(e)}
-        //   >
-        //     <Button variant="danger" type="button">
-        //       Delete Tournament
-        //     </Button>
-        //     <Toaster />
-        //   </Popconfirm>
-        // </div>
+          return <div className="d-flex gap-2 flex-column py-2 align-items-start">
+          <Popconfirm
+            title="Update the task"
+            description="Are you sure to update this task?"
+            okText="Yes"
+            cancelText="No"
+            onCancel={() => message.info("Cancle update")}
+            onConfirm={(e) => {
+              navigate(`/tournaments/:${_._id}`,{state:{tournament:_}})
+            }}
+          >
+            <Button variant="outline-primary" size='sm'>Update</Button>
+            <Toaster />
+          </Popconfirm>
+        </div>
         }
       }
     ];
@@ -211,6 +184,7 @@ const TournamentsContainer = () => {
         pagination={false}
         dataSource={tournaments}
         size="small"
+        rowKey={(row)=>row._id || row.id}
       />  
       }
     </Container>

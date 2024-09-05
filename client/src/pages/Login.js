@@ -11,10 +11,13 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("/api/v1/auth/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/auth/login",
+        {
+          email,
+          password,
+        }
+      );
       const { success, message, user, token } = response.data;
 
       if (success) {
@@ -24,7 +27,7 @@ const Login = () => {
         if (user.role === 1) {
           navigate("/clubs"); // Navigate to /create page if role is 1
         } else if (user.role === 0 && user.slug) {
-          navigate(`/clubdetail/${user.slug}`);
+          navigate(`/club/${user.slug}`);
         } else {
           alert("User slug is missing.");
         }

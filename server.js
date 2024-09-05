@@ -9,6 +9,7 @@ import Clubsroute from "./routes/Clubsroute.js";
 import Pigeonownerroute from "./routes/Pigeonownerroute.js";
 import tournamentRoute from "./routes/tournamentRoute.js";
 import requestTournamentRoutes from "./routes/tournamentRoute.js";
+import imageRoutes from "./routes/ImageRoutes.js";
 import cors from "cors";
 // import { createServer } from "http";
 // import { Server } from "socket.io";
@@ -36,6 +37,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/v1/auth", Clubsroute);
 app.use("/api/v1", Pigeonownerroute);
 app.use("/api/v1/tournaments", tournamentRoute);
+app.use("/api/v1/images", imageRoutes);
 app.use("/api/v1/requestTournaments", requestTournamentRoutes);
 
 app.get("/", (req, res) => {

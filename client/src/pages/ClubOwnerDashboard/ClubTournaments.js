@@ -1,24 +1,28 @@
 import { Table, Tag } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
-import toast from "react-hot-toast";
+import { Button, Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const ClubTournaments = () => {
   const [tournaments, setTournaments] = useState([]);
-  const fetchTournaments = async () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+
+  const fetchClubTournaments = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/v1/tournaments/"
+        `http://localhost:8080/api/v1/tournaments/club/:${user.id}`
       );
-      setTournaments(response.data.tournaments);
+      if (response.data.success) {
+        setTournaments(response.data.clubTournaments);
+      }
     } catch (error) {
-      console.log(error);
-      toast.error(error);
+      console.error("Error fetching clubs:", error);
     }
   };
   useEffect(() => {
-    fetchTournaments();
+    fetchClubTournaments();
   }, []);
   const columns = [
     {
@@ -78,14 +82,6 @@ const ClubTournaments = () => {
       dataIndex: "type",
     },
     {
-      title: "Participating Loft",
-      dataIndex: "participatingLoft",
-      render: (_) => {
-        return _.join(" ");
-      },
-    },
-
-    {
       title: "First Prize",
       dataIndex: "prize1",
     },
@@ -108,9 +104,19 @@ const ClubTournaments = () => {
     },
     {
       title: "Participating Loft",
-      dataIndex: "participatingLoft",
-      render: (_) => {
-        return _.join(" ");
+      dataIndex: "actions",
+      render: (rowRecord) => {
+        return (
+          <Button
+            size="sm"
+            variant="outline-info"
+            onClick={() => {
+              navigate(`/club/${user.slug}/pigeonOwners`);
+            }}
+          >
+            Participants
+          </Button>
+        );
       },
     },
   ];
@@ -121,10 +127,10 @@ const ClubTournaments = () => {
         columns={columns}
         scroll={{ x: 1300 }}
         pagination={false}
-        dataSource={tournaments}
+        dataSource={tournaments && tournaments}
         size="small"
+        rowKey={(rowRecord) => rowRecord.id || rowRecord._id}
       />
-      ;
     </Container>
   );
 };

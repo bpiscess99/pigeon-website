@@ -15,6 +15,10 @@ import TournamentForm from "./pages/components/TournamentForm";
 import PigeonOwnerContainer from "./pages/PigeonOwner/PigeonOwnerContainer";
 import PigeonOwnerForm from "./pages/PigeonOwner/PigeonOwnerForm";
 import PigeonResultsForm from "./pages/results/PigeonResultsForm";
+import PegionOwnersResult from "./pages/results/PegionOwnersResult";
+import PigeonOwnerResultUpdate from "./pages/results/PigeonOwnerResultUpdate";
+import BannerForm from "./pages/Banner/BannerForm";
+import BannerContainer from "./pages/Banner/BannerContainer";
 
 function App() {
   return (
@@ -39,6 +43,11 @@ function App() {
             <Route path="pigeonOwners" element={<PigeonOwnerContainer />} />
             <Route path="pigeonOwnerForm" element={<PigeonOwnerForm />} />
             <Route path="pigeonResultForm" element={<PigeonResultsForm />} />
+            <Route path="pigeonOwnerResults" element={<PegionOwnersResult />} />
+            <Route
+              path="pigeonOwnerResultUpdate"
+              element={<PigeonOwnerResultUpdate />}
+            />
           </Route>
 
           {/* tournaments */}
@@ -53,6 +62,9 @@ function App() {
               element={<CreateTournament />}
             />
             <Route path="/tournaments/:id" element={<TournamentDetails />} />
+
+            <Route path="/banners/bannerForm" element={<BannerForm />} />
+            <Route path="/banners" element={<BannerContainer />} />
           </Route>
         </Route>
       </Routes>
