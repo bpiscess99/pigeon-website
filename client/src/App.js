@@ -19,6 +19,10 @@ import PegionOwnersResult from "./pages/results/PegionOwnersResult";
 import PigeonOwnerResultUpdate from "./pages/results/PigeonOwnerResultUpdate";
 import BannerForm from "./pages/Banner/BannerForm";
 import BannerContainer from "./pages/Banner/BannerContainer";
+import BannerLayout from "./pages/Banner/BannerLayout";
+import PigeonAdminContainer from "./pages/AdminPigeonOwnerContainer/PigeonAdminContainer";
+import ClubOwnerDashboard from "./pages/ClubOwnerDashboard/ClubOwnerDashboard";
+import LandingClubs from "./pages/LandingComponents/LandingClubs";
 
 function App() {
   return (
@@ -34,12 +38,9 @@ function App() {
           </Route>
 
           {/* club owner dashboard */}
-          <Route path="club/:id/" element={<ClubDashboardContainer />}>
+          <Route path="club/:id/" element={<ClubOwnerDashboard />}>
             <Route path="tournaments" element={<ClubTournaments />} />
-            <Route
-              path="createTournaments"
-              element={<TournamentForm width="100%" />}
-            />
+            <Route path="createTournaments" element={<TournamentForm />} />
             <Route path="pigeonOwners" element={<PigeonOwnerContainer />} />
             <Route path="pigeonOwnerForm" element={<PigeonOwnerForm />} />
             <Route path="pigeonResultForm" element={<PigeonResultsForm />} />
@@ -62,11 +63,19 @@ function App() {
               element={<CreateTournament />}
             />
             <Route path="/tournaments/:id" element={<TournamentDetails />} />
-
+          </Route>
+          {/* bannners */}
+          <Route element={<BannerLayout />}>
             <Route path="/banners/bannerForm" element={<BannerForm />} />
-            <Route path="/banners" element={<BannerContainer />} />
+            <Route path="/banners" index element={<BannerContainer />} />
+          </Route>
+
+          <Route element={<PigeonAdminContainer />}>
+            {/* <Route path="/pigeonOwners" element={<PegionOwnersResult />} /> */}
+            {/* <Route path="/pigeonOwners/pigeonOwnerForm" index element={<BannerContainer />} /> */}
           </Route>
         </Route>
+        <Route path="/cl" element={<LandingClubs />} />
       </Routes>
     </>
   );

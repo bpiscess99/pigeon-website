@@ -1,9 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Button, Table } from "react-bootstrap";
-import { Tag } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Image, Table } from "react-bootstrap";
+import { Breadcrumb, Tag } from "antd";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import {
+  AppstoreAddOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 
 const PigeonOwnerContainer = () => {
   const [owners, setOwners] = useState([]);
@@ -101,13 +106,58 @@ const PigeonOwnerContainer = () => {
 
   return (
     <div>
-      <div className="d-flex gap-2">
+      <Breadcrumb
+        style={{ color: "#ffa76e" }}
+        className="px-2 pb-2"
+        items={[
+          {
+            title: "Dashboard",
+          },
+          {
+            title: (
+              <NavLink
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "black" : "#ffa76e",
+                    fontWeight: isActive ? "normal" : "bold",
+                    backgroundColor: isActive ? "#ffa76e" : "",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+                className={"text-decoration-none"}
+                to={`/club/:${user.slug}/pigeonOwners`}
+              >
+                Pigeon Owners
+              </NavLink>
+            ),
+          },
+          {
+            title: (
+              <NavLink
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "black" : "#ffa76e",
+                    fontWeight: isActive ? "normal" : "bold",
+                    backgroundColor: isActive ? "#ffa76e" : "",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+                to={`/club/:${user.slug}/pigeonOwnerForm`}
+                className={"text-decoration-none"}
+              >
+                Create Pigeon Owners
+              </NavLink>
+            ),
+          },
+        ]}
+      />
+      <div className="d-flex px-2 gap-2">
         {tournaments &&
           tournaments.map((_, index) => {
             return (
               <Button
                 size="sm"
-                variant={`${index === 0 ? "info" : "outline-info"}`}
+                variant={"outline-info"}
                 key={index}
                 onClick={(e) => fetchTournamentPigeons(_._id)}
               >
@@ -116,102 +166,103 @@ const PigeonOwnerContainer = () => {
             );
           })}
       </div>
-
-      <Table responsive>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Contacts</th>
-            <th>City</th>
-            <th>Results</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {owners.length > 0 &&
-            owners.map((owner, index) => (
-              <tr key={owner._id}>
-                <td>{index + 1}</td>
-                <td>
-                  <img
-                    src={`/uploads/${owner.image}`}
-                    alt={owner.name}
-                    width="40"
-                    height="40"
-                  />
-                </td>
-                <td>{owner.name}</td>
-                <td>
-                  <Tag color="orange">{owner.contacts}</Tag>
-                </td>
-                <td>{owner.city}</td>
-                <td>
-                  <div className="d-flex flex-column gap-1">
-                    {owner.pigeonsResults !== undefined ? (
+      <div className="px-2 py-2">
+        <Table responsive striped border={"1px solid grey"} hover size="sm">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Contacts</th>
+              <th>City</th>
+              <th>Results</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {owners.length > 0 &&
+              owners.map((owner, index) => (
+                <tr key={owner._id}>
+                  <td>{index + 1}</td>
+                  <td>
+                    <img
+                      src={`http://localhost:8080/uploads/${owner.image}`}
+                      alt={owner.name}
+                      width="40"
+                      height="40"
+                    />
+                  </td>
+                  <td>{owner.name}</td>
+                  <td>
+                    <Tag color="orange">{owner.contacts}</Tag>
+                  </td>
+                  <td>{owner.city}</td>
+                  <td>
+                    <div className="d-flex gap-1">
+                      {owner.pigeonsResults !== undefined ? (
+                        <Button
+                          size="sm"
+                          variant="outline-info"
+                          onClick={() => {
+                            navigate(`/club/${slug}/pigeonOwnerResultUpdate`, {
+                              state: { owner },
+                            });
+                          }}
+                        >
+                          <Image src="/update.png" />
+                          Update
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline-primary"
+                          onClick={() => {
+                            navigate(`/club/${slug}/pigeonResultForm`, {
+                              state: { owner },
+                            });
+                          }}
+                        >
+                          <Image src="/add.png" />
+                        </Button>
+                      )}
                       <Button
                         size="sm"
-                        variant="secondary"
+                        variant="outline-info"
                         onClick={() => {
-                          navigate(`/club/${slug}/pigeonOwnerResultUpdate`, {
+                          navigate(`/club/${slug}/pigeonOwnerResults`, {
                             state: { owner },
                           });
                         }}
                       >
-                        Update
+                        View
                       </Button>
-                    ) : (
+                    </div>
+                  </td>
+
+                  <td>
+                    <div className="d-flex gap-1">
                       <Button
                         size="sm"
                         variant="outline-primary"
-                        onClick={() => {
-                          navigate(`/club/${slug}/pigeonResultForm`, {
-                            state: { owner },
-                          });
-                        }}
+                        onClick={() => handleEditClick(owner)}
                       >
-                        Add
+                        <EditOutlined />
                       </Button>
-                    )}
-                    <Button
-                      size="sm"
-                      variant="outline-info"
-                      onClick={() => {
-                        navigate(`/club/${slug}/pigeonOwnerResults`, {
-                          state: { owner },
-                        });
-                      }}
-                    >
-                      View
-                    </Button>
-                  </div>
-                </td>
 
-                <td>
-                  <div className="d-flex flex-column gap-1">
-                    <Button
-                      size="sm"
-                      variant="outline-primary"
-                      onClick={() => handleEditClick(owner)}
-                    >
-                      Edit
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      variant="danger"
-                      onClick={() => handleDeleteClick(owner)}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </Table>
-
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        onClick={() => handleDeleteClick(owner)}
+                      >
+                        <DeleteOutlined />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </Table>
+      </div>
       {editingOwner && (
         <div className="modal show d-block" tabIndex="-1" role="dialog">
           <div className="modal-dialog" role="document">

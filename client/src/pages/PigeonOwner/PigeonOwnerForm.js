@@ -1,8 +1,9 @@
+import { Breadcrumb, Input } from "antd";
 import axios from "axios";
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const PigeonOwnerForm = () => {
   const [phoneError, setPhoneError] = useState("");
@@ -90,12 +91,57 @@ const PigeonOwnerForm = () => {
   }, []);
 
   return (
-    <div className="row p-3">
-      <div className="col-lg-7">
-        <div className="card">
-          <div className="card-body">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h5 className="card-title">Enter Details</h5>
+    <div className="d-flex flex-column align-items-start justify-content-center">
+      <Breadcrumb
+        style={{ color: "#ffa76e" }}
+        className="px-4 py-2"
+        items={[
+          {
+            title: "Dashboard",
+          },
+          {
+            title: (
+              <NavLink
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "black" : "#ffa76e",
+                    fontWeight: isActive ? "normal" : "bold",
+                    backgroundColor: isActive ? "#ffa76e" : "",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+                className={"text-decoration-none"}
+                to={`/club/:${user.slug}/pigeonOwners`}
+              >
+                Pigeon Owners
+              </NavLink>
+            ),
+          },
+          {
+            title: (
+              <NavLink
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "black" : "#ffa76e",
+                    fontWeight: isActive ? "normal" : "bold",
+                    backgroundColor: isActive ? "#ffa76e" : "",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+                to={`/club/:${user.slug}/pigeonOwnerForm`}
+                className={"text-decoration-none"}
+              >
+                Create Pigeon Owner
+              </NavLink>
+            ),
+          },
+        ]}
+      />
+      <div className="d-flex justify-content-center">
+        <div className="w-50 p-3">
+          <div>
+            <div className="d-flex justify-content-center align-items-center ">
+              <h5 className="card-title">Create Participant</h5>
             </div>
             <form
               ref={formRef}
@@ -103,8 +149,8 @@ const PigeonOwnerForm = () => {
               onSubmit={handleSubmit}
               encType="multipart/form-data"
             >
-              <div className=" me-3 d-flex align-items-center gap-3">
-                <label>Tournament</label>
+              <div className="">
+                <label className="w-25">Tournament</label>
                 <select
                   className="aaq form-control"
                   type="text"
@@ -124,8 +170,8 @@ const PigeonOwnerForm = () => {
                     })}
                 </select>
               </div>
-              <div className="me-3 d-flex align-items-center gap-3">
-                <label>Name</label>
+              <div>
+                <label className="w-25">Name</label>
                 <input
                   className="aaq form-control"
                   type="text"
@@ -136,8 +182,8 @@ const PigeonOwnerForm = () => {
                 />
               </div>
 
-              <div className=" me-3 d-flex align-items-center gap-3">
-                <label>Phone</label>
+              <div>
+                <label className="w-25">Phone</label>
                 <input
                   className={`aaq form-control ${
                     phoneError ? "is-invalid" : ""
@@ -154,8 +200,8 @@ const PigeonOwnerForm = () => {
                   <div className="invalid-feedback">{phoneError}</div>
                 )}
               </div>
-              <div className="me-3 d-flex align-items-center gap-3">
-                <label>City</label>
+              <div>
+                <label className="w-25">City</label>
 
                 <input
                   className="aaq form-control"
@@ -166,7 +212,9 @@ const PigeonOwnerForm = () => {
                   required
                 />
               </div>
-              <div className="col-6 me-3" id="hyy">
+              <div>
+                <label className="w-25">Image</label>
+
                 <input
                   type="file"
                   id="image"
@@ -176,8 +224,8 @@ const PigeonOwnerForm = () => {
                   onChange={handleImageChange}
                 />
               </div>
-              <div className="col-4 ms-5">
-                <button className="zza btn btn-primary w-100" type="submit">
+              <div className=" d-flex justify-content-center">
+                <button className="zza btn btn-primary" type="submit">
                   Create Owner
                 </button>
                 <Toaster />

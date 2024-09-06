@@ -1,9 +1,10 @@
 // import { Select } from "antd";
+import { Breadcrumb } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const TournamentForm = () => {
   const navigate = useNavigate();
@@ -101,6 +102,51 @@ const TournamentForm = () => {
 
   return (
     <>
+      <Breadcrumb
+        style={{ color: "#ffa76e" }}
+        className="px-2 pb-2"
+        items={[
+          {
+            title: "Dashboard",
+          },
+          {
+            title: (
+              <NavLink
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "black" : "#ffa76e",
+                    fontWeight: isActive ? "normal" : "bold",
+                    backgroundColor: isActive ? "#ffa76e" : "",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+                className={"text-decoration-none"}
+                to={`/club/:${user.slug}/tournaments`}
+              >
+                Tournaments
+              </NavLink>
+            ),
+          },
+          {
+            title: (
+              <NavLink
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "black" : "#ffa76e",
+                    fontWeight: isActive ? "normal" : "bold",
+                    backgroundColor: isActive ? "#ffa76e" : "",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+                to={`/club/:${user.slug}/createTournaments`}
+                className={"text-decoration-none"}
+              >
+                Create Tournament
+              </NavLink>
+            ),
+          },
+        ]}
+      />
       <Form
         onSubmit={handleSubmit}
         className="d-flex gap-2 px-3 w-100 flex-column align-items-center"

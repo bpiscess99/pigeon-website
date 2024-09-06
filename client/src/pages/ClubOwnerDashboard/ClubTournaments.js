@@ -1,8 +1,8 @@
-import { Table, Tag } from "antd";
+import { Breadcrumb, Table, Tag } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const ClubTournaments = () => {
   const [tournaments, setTournaments] = useState([]);
@@ -27,22 +27,27 @@ const ClubTournaments = () => {
   const columns = [
     {
       title: "Tournament",
+      align: "start",
       dataIndex: "tournamentName",
     },
     {
       title: "Category",
+      align: "center",
       dataIndex: "category",
     },
     {
-      title: "Number Of Prizes",
+      title: "No Prizes",
+      align: "center",
       dataIndex: "numberOfPrizes",
     },
     {
-      title: "Number Of Pigeons",
+      title: "No Pigeons",
+      align: "center",
       dataIndex: "numberOfPigeons",
     },
     {
       title: "Start Date",
+      align: "center",
       dataIndex: "startDate",
       render: (_, { tags }) => {
         const date = _.slice(0, 10);
@@ -51,10 +56,12 @@ const ClubTournaments = () => {
     },
     {
       title: "Start Time",
+      align: "center",
       dataIndex: "startTime",
     },
     {
       title: "Status",
+      align: "center",
       dataIndex: "status_",
       render: (_, { tags }) => {
         const color = _.length <= 6 ? "red" : "blue";
@@ -62,56 +69,67 @@ const ClubTournaments = () => {
       },
     },
     {
-      title: "Tournament Information",
+      title: "Tournament Info",
+      align: "center",
       dataIndex: "tournamentInformation",
     },
     {
       title: "Helper Pigeons",
+      align: "center",
       dataIndex: "helperPigeons",
     },
     {
       title: "Continue Days",
+      align: "center",
       dataIndex: "continueDays",
     },
     {
-      title: "Number of Days",
+      title: "No Days",
+      align: "center",
       dataIndex: "numberOfDays",
     },
     {
       title: "Type",
+      align: "center",
       dataIndex: "type",
     },
     {
-      title: "First Prize",
+      title: "1st Prize",
+      align: "center",
       dataIndex: "prize1",
     },
     {
       title: "2nd Prize",
+      align: "center",
       dataIndex: "prize2",
     },
     {
       title: "3rd Prize",
+      align: "center",
       dataIndex: "prize3",
     },
     {
       title: "4th Prize",
+      align: "center",
       dataIndex: "prize4",
     },
 
     {
       title: "5th Prize",
+      align: "center",
       dataIndex: "prize5",
     },
     {
-      title: "Participating Loft",
+      title: "Participating Lofts",
+      align: "center",
       dataIndex: "actions",
       render: (rowRecord) => {
         return (
           <Button
             size="sm"
-            variant="outline-info"
+            variant="success"
             onClick={() => {
-              navigate(`/club/${user.slug}/pigeonOwners`);
+              navigate(`/club/${user.slug}/pigeonOwnerForm`);
             }}
           >
             Participants
@@ -120,18 +138,69 @@ const ClubTournaments = () => {
       },
     },
   ];
+  const rowClassName = (record, index) => {
+    return index % 2 === 0 ? "striped-row" : ""; // Apply class to every other row
+  };
 
   return (
-    <Container>
+    <div className="px-2">
+      <Breadcrumb
+        style={{ color: "#ffa76e" }}
+        className="px-2 pb-2"
+        items={[
+          {
+            title: "Dashboard",
+          },
+          {
+            title: (
+              <NavLink
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "black" : "#ffa76e",
+                    fontWeight: isActive ? "normal" : "bold",
+                    backgroundColor: isActive ? "#ffa76e" : "",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+                className={"text-decoration-none"}
+                to={`/club/:${user.slug}/tournaments`}
+              >
+                Tournaments
+              </NavLink>
+            ),
+          },
+          {
+            title: (
+              <NavLink
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "black" : "#ffa76e",
+                    fontWeight: isActive ? "normal" : "bold",
+                    backgroundColor: isActive ? "#ffa76e" : "",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+                to={`/club/:${user.slug}/createTournaments`}
+                className={"text-decoration-none"}
+              >
+                Create Tournaments
+              </NavLink>
+            ),
+          },
+        ]}
+      />
       <Table
         columns={columns}
         scroll={{ x: 1300 }}
+        bordered
+        showSorterTooltip
         pagination={false}
         dataSource={tournaments && tournaments}
         size="small"
+        rowClassName={rowClassName} // Apply the class to the rows
         rowKey={(rowRecord) => rowRecord.id || rowRecord._id}
       />
-    </Container>
+    </div>
   );
 };
 

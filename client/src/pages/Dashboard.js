@@ -255,35 +255,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-// "import axios from 'axios';
-// import React, { useEffect, useState } from 'react';
-// import { Carousel } from 'react-bootstrap';
-
-// const CarosuelImage = () => {
-//   const [images, setImages] = useState([])
-
-//   useEffect(() => {
-//     const fetchImages = async() => {
-//         try {
-//             const response = await axios.get(/api/images)
-//             setImages(response.data);
-//             console.log("response:", response.data)
-//         } catch (error) {
-//             console.log("fetchImages", error)
-//         }
-//     }
-//     fetchImages()
-//   }, [])
-
-//   return (
-
-//   );
-// };
-
-// export default CarosuelImage
-// """
-
-// <div id="carouselExample" className="carousel slide">
-
-//     </div>

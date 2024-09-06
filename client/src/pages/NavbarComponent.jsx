@@ -5,12 +5,18 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from 'react-router-dom';
 
 function NavbarComponent() {
+  const user = localStorage.getItem("user");
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand>Pigeon</Navbar.Brand>
+      <Navbar.Brand>Pigeon</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
+        {
+          user.role === 1
+          ?
+        (<>
           <Nav className="ms-auto">
           <Nav.Link >
             <NavLink to={"/clubs"}></NavLink>
@@ -26,7 +32,6 @@ function NavbarComponent() {
                 <NavLink to={"/clubs/create"}>Create Clubs</NavLink>
               </NavDropdown.Item> 
             </NavDropdown>
-
             <NavDropdown title="Tournaments">
               <NavDropdown.Item>
                 <NavLink to={"/tournaments"}>Tournaments</NavLink>
@@ -47,10 +52,93 @@ function NavbarComponent() {
             </NavDropdown>
 
           </Nav>
-        </Navbar.Collapse>
+        </>)  
+        :
+        (
+          <>
+          <Nav className="ms-auto">
+          <Nav.Link >
+            <NavLink to={""}></NavLink>
+          </Nav.Link>
+            <Nav.Link>
+            </Nav.Link>
+            <NavDropdown title="Tournaments">
+              <NavDropdown.Item>
+                <NavLink to={`/club/${user.slug}/tournaments`}>tournaments</NavLink>
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item>
+                <NavLink to={`/club/${user.slug}/createTournaments`}>Create tournament</NavLink>
+              </NavDropdown.Item> 
+            </NavDropdown>
+            <NavDropdown title="Participants">
+              <NavDropdown.Item>
+                <NavLink to={`/club/${user.slug}/pigeonOwners`}>Participants</NavLink>
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item>
+                <NavLink to={`/club/${user.slug}/pigeonOwnerForm`}>Create Particiapant</NavLink>
+              </NavDropdown.Item> 
+            </NavDropdown>
+          </Nav>
+        </>
+        )
+        }
+      </Navbar.Collapse>
       </Container>
     </Navbar>
   );
 }
 
 export default NavbarComponent;
+
+
+  // const items = [
+  //   {
+  //     key: "1",
+  //     label: "Tournament",
+  //     children: [
+  //       {
+  //         key: `/club/${slug}/tournaments`,
+  //         label: "Tournaments",
+  //       },
+  //       {
+  //         type: "divider",
+  //       },
+  //       {
+  //         key: `/club/${slug}/createTournaments`,
+  //         label: "Create Tournament",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     key: "2",
+  //     label: "Pigeon Owner",
+  //     children: [
+  //       {
+  //         key: `/club/${slug}/pigeonOwners`,
+  //         label: "Pigeon Owner",
+  //       },
+  //       {
+  //         type: "divider",
+  //       },
+  //       {
+  //         key: `/club/${slug}/pigeonOwnerForm`,
+  //         label: "Pigeon Form",
+  //       },
+  //     ],
+  //   },
+  //   // {
+  //   //   key: "3",
+  //   //   label: "Results",
+  //   //   children: [
+  //   //     {
+  //   //       key: `/club/${slug}/pigeonResultForm`,
+  //   //       label: "Create Results",
+  //   //     },
+  //   //     {
+  //   //       type: "divider",
+  //   //     },
+  //   //   ],
+  //   // },
+  // ];

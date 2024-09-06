@@ -122,14 +122,12 @@ const TournamentsContainer = () => {
         </div>
         }
       }
-    ];
-
-        
+    ];   
     const { Meta } = Card;
     const navigate =useNavigate()
    return (
     <Container >
-    <h5 className="card-title">Tournaments</h5>
+    <h5 className="card-title">total tournaments <Tag color='blue'>{tournaments.length}</Tag></h5>
     {!isTabular ?
       <div className='d-flex gap-2 flex-wrap justify-content-center'>
        {
