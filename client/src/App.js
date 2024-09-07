@@ -20,10 +20,16 @@ import PigeonOwnerResultUpdate from "./pages/results/PigeonOwnerResultUpdate";
 import BannerForm from "./pages/Banner/BannerForm";
 import BannerContainer from "./pages/Banner/BannerContainer";
 import BannerLayout from "./pages/Banner/BannerLayout";
-import PigeonAdminContainer from "./pages/AdminPigeonOwnerContainer/PigeonAdminContainer";
+import PigeonAdminContainer from "./pages/AdminPigeonOwnerContainer/AdminPigeonOwnerContainer";
 import ClubOwnerDashboard from "./pages/ClubOwnerDashboard/ClubOwnerDashboard";
 import LandingClubs from "./pages/LandingComponents/LandingClubs";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminPigeonForm from "./pages/AdminPigeonOwnerContainer/AdminPigeonForm";
+import AdminPigeonOwnerContainer from "./pages/AdminPigeonOwnerContainer/AdminPigeonOwnerContainer";
+import AdminPigeonOwners from "./pages/AdminPigeonOwnerContainer/AdminPigeonOwners";
+import AdminViewPigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminViewPigeonOwnerResult";
+import AdminAddPigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminAddPigeonOwnerResult";
+import AdminUpdatePigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminUpdatePigeonOwnerResult";
 
 function App() {
   return (
@@ -58,26 +64,38 @@ function App() {
             <Route path="/banners" index element={<BannerContainer />} />
           </Route>
 
-          {/* club owner dashboard */}
-          <Route path="club/:id/dashboard" element={<ClubOwnerDashboard />} />
-          <Route path="club/:id/" element={<ClubDashboardContainer />}>
-            <Route path="tournaments" element={<ClubTournaments />} />
-            <Route path="createTournaments" element={<TournamentForm />} />
-            {/*pigeon owners  */}
-            <Route path="pigeonOwners" element={<PigeonOwnerContainer />} />
-            <Route path="pigeonOwnerForm" element={<PigeonOwnerForm />} />
-            <Route path="pigeonResultForm" element={<PigeonResultsForm />} />
-            <Route path="pigeonOwnerResults" element={<PegionOwnersResult />} />
-            <Route
-              path="pigeonOwnerResultUpdate"
-              element={<PigeonOwnerResultUpdate />}
-            />
+          <Route path="/pigeonOwners" element={<AdminPigeonOwnerContainer />}>
+            <Route path="pigeonOwnerForm" element={<AdminPigeonForm />} />
+            <Route index element={<AdminPigeonOwners />} />
           </Route>
+          <Route
+            path="/pigeonOwners/pigeonOwnerResult"
+            element={<AdminViewPigeonOwnerResult />}
+          />
+          <Route
+            path="/pigeonOwners/addPigeonOwnerResult"
+            element={<AdminAddPigeonOwnerResult />}
+          />
+          <Route
+            path="/pigeonOwners/updatePigeonOwnerResult"
+            element={<AdminUpdatePigeonOwnerResult />}
+          />
+        </Route>
 
-          <Route element={<PigeonAdminContainer />}>
-            {/* <Route path="/pigeonOwners" element={<PegionOwnersResult />} /> */}
-            {/* <Route path="/pigeonOwners/pigeonOwnerForm" index element={<BannerContainer />} /> */}
-          </Route>
+        {/* club owner dashboard */}
+        <Route path="club/:id/dashboard" element={<ClubOwnerDashboard />} />
+        <Route path="club/:id/" element={<ClubDashboardContainer />}>
+          <Route path="tournaments" element={<ClubTournaments />} />
+          <Route path="createTournaments" element={<TournamentForm />} />
+          {/*pigeon owners  */}
+          <Route path="pigeonOwners" element={<PigeonOwnerContainer />} />
+          <Route path="pigeonOwnerForm" element={<PigeonOwnerForm />} />
+          <Route path="pigeonResultForm" element={<PigeonResultsForm />} />
+          <Route path="pigeonOwnerResults" element={<PegionOwnersResult />} />
+          <Route
+            path="pigeonOwnerResultUpdate"
+            element={<PigeonOwnerResultUpdate />}
+          />
         </Route>
         <Route path="/cl" element={<LandingClubs />} />
       </Routes>

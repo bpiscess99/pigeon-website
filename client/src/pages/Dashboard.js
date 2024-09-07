@@ -10,7 +10,7 @@ import ClubsContext from "./Contexts/ClubsContext";
 const Dashboard = () => {
   const { clubs } = useContext(ClubsContext);
   const [results, setResults] = useState([]);
-  const { tournaments } = useContext(TournamentContext);
+  const { tournaments, fetchTournaments } = useContext(TournamentContext);
   const [tournament, setTournament] = useState({});
   const [images, setImages] = useState([]);
 
@@ -49,6 +49,7 @@ const Dashboard = () => {
   };
   useEffect(() => {
     fetchImages();
+    fetchTournaments();
   }, []);
 
   return (

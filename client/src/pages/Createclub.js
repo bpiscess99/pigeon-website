@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -67,7 +67,7 @@ const Createclub = () => {
                   className="aaq form-control"
                   id="yourName"
                   required
-                  placeholder="Enter Your Name"
+                  placeholder="Your Name"
                 />
               </div>
             </div>
@@ -80,7 +80,7 @@ const Createclub = () => {
                 className="aaq form-control"
                 id="yourClub"
                 required
-                placeholder="Enter Your Club"
+                placeholder="Club Name"
               />
               <div className="invalid-feedback">Please, enter your Club!</div>
             </div>
@@ -93,7 +93,7 @@ const Createclub = () => {
                 className="aaq form-control"
                 id="yourEmail"
                 required
-                placeholder="Enter Your Email"
+                placeholder="Email"
               />
               <div className="invalid-feedback">
                 Please enter a valid Email address!
@@ -108,14 +108,14 @@ const Createclub = () => {
                 className="aaq form-control"
                 id="yourPassword"
                 required
-                placeholder="Enter Your Password"
+                placeholder="Password"
               />
               <div className="invalid-feedback">
                 Please enter your password!
               </div>
             </div>
 
-            <Button size="sm" variant="outline-info" type="submit">
+            <Button size="sm" variant="dark" type="submit">
               Create Club
             </Button>
             <Toaster />

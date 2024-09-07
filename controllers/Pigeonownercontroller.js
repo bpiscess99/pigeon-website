@@ -4,6 +4,7 @@ import crypto from "crypto";
 import multer from "multer";
 import path from "path";
 import Tournament from "../models/tournamentModel.js";
+import { log } from "console";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -198,5 +199,36 @@ export const createPegionResults = async (req, res) => {
   } catch (error) {
     console.error("Error ", error);
     res.status(400).json({ success: false, message: error });
+  }
+};
+
+export const getTournamentOfPigeonOwners = async (req, res) => {
+  try {
+    const pigeonOwnerId = req.params.pigeonOwnerId.slice(1);
+    const tournamentOfPigeonOwner = await Pigeonwnermodal.findOne({
+      _id: pigeonOwnerId,
+    }).populate("tournament", "startTime");
+
+    if (tournamentOfPigeonOwner.populated() === "undefined") {
+      return res.status(400).json({
+        status: false,
+        msg: `Tournament could not be populated`,
+      });
+    }
+    if (!tournamentOfPigeonOwner) {
+      return res.status(400).json({
+        status: false,
+        msg: `Tournament does not exists ${pigeonOwnerId}`,
+      });
+    }
+
+    res.status(200).json({
+      status: true,
+      msg: "Tournament",
+      startTime: tournamentOfPigeonOwner.tournament.startTime,
+    });
+  } catch (error) {
+    console.error("Error ", error);
+    return res.status(400).json({ success: false, message: error });
   }
 };

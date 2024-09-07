@@ -20,7 +20,9 @@ export const TournamentProvider = ({ children }) => {
   }, []);
 
   return (
-    <TournamentContext.Provider value={{ tournaments, setTournaments }}>
+    <TournamentContext.Provider
+      value={{ tournaments, fetchTournaments, setTournaments }}
+    >
       {children}
     </TournamentContext.Provider>
   );

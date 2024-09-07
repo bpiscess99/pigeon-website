@@ -1,6 +1,6 @@
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -44,15 +44,6 @@ const TournamentDetails = () => {
     });
   };
 
-  const handleLoftChange = (value) => {
-    setTournamentDetails((prevTournament) => {
-      return {
-        ...prevTournament,
-        participatingLoft: value,
-      };
-    });
-  };
-
   const handleDeleteTournament = async () => {
     console.log("delete tournament");
     let response;
@@ -60,8 +51,6 @@ const TournamentDetails = () => {
       response = await axios.delete(
         `http://localhost:8080/api/v1/tournaments/${id}`
       );
-      console.log(response);
-
       if (response.status === 200) {
         toast.success(`${response.data.message} deleted successfully!`);
         setTimeout(() => {
@@ -82,8 +71,6 @@ const TournamentDetails = () => {
         `http://localhost:8080/api/v1/tournaments/${id}`,
         tournamentDetails
       );
-      console.log(response);
-
       if (response.status === 200) {
         toast.success(`${response.data.message} edited successfully!`);
         setTimeout(() => {

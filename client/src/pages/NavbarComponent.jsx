@@ -15,35 +15,74 @@ function NavbarComponent() {
         
           <Nav className="ms-auto">
           <Nav.Link >
-            <NavLink to={"/clubs"}></NavLink>
+            <NavLink style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "blue" : "black",
+
+                    };
+                  }} to={"/clubs"}></NavLink>
           </Nav.Link>
             <Nav.Link>
             </Nav.Link>
             <NavDropdown title="Dashboard">
               <NavDropdown.Item>
-                <NavLink to={"/clubs"}>Clubs</NavLink>
+                <NavLink style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "blue" : "black",
+
+                    };
+                  }} className={"text-decoration-none"} to={"/clubs"}>All Clubs</NavLink>
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item>
-                <NavLink to={"/clubs/create"}>Create Clubs</NavLink>
+                <NavLink style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "blue" : "black",
+
+                    };
+                  }} className={"text-decoration-none"} to={"/clubs/create"}>Create Clubs</NavLink>
               </NavDropdown.Item> 
             </NavDropdown>
             <NavDropdown title="Tournaments">
               <NavDropdown.Item>
-                <NavLink to={"/tournaments"}>Tournaments</NavLink>
+                <NavLink 
+                  className={"text-decoration-none"} to={"/tournaments"}
+                  style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "blue" : "black",
+
+                    };
+                  }}
+                  >Tournaments</NavLink>
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item>
-                <NavLink to={"/tournaments/tournamentForm"}>Create Tournament</NavLink>
+                <NavLink 
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "blue" : "black",
+
+                  };
+                }}
+                className={"text-decoration-none"} to={"/tournaments/tournamentForm"}>Create Tournament</NavLink>
               </NavDropdown.Item> 
             </NavDropdown>
             <NavDropdown title="Banners">
               <NavDropdown.Item>
-                <NavLink to={"/banners"}>Banners</NavLink>
+                <NavLink style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "blue" : "black",
+
+                    };
+                  }} className={"text-decoration-none"} to={"/banners"}>Banners</NavLink>
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item>
-                <NavLink to={"/banners/bannerForm"}>Create Banner</NavLink>
+                <NavLink style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "blue" : "black",
+                    };
+                  }} className={"text-decoration-none"} to={"/banners/bannerForm"}>Create Banner</NavLink>
               </NavDropdown.Item> 
             </NavDropdown>
 

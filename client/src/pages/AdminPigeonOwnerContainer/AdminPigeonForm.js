@@ -1,20 +1,19 @@
-import { Breadcrumb, Input } from "antd";
+import { Breadcrumb } from "antd";
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { NavLink, useNavigate } from "react-router-dom";
+import TournamentContext from "../Contexts/TournamentContext";
 
-const PigeonOwnerForm = () => {
+const AdminPigeonForm = () => {
   const [phoneError, setPhoneError] = useState("");
   const [phone, setPhone] = useState("");
   const formRef = useRef(null);
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
   const [owners, setOwners] = useState([]);
-  const slug = JSON.parse(localStorage.getItem("user")).slug;
-  const [tournaments, setTournaments] = useState([]);
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { tournaments } = useContext(TournamentContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,28 +35,16 @@ const PigeonOwnerForm = () => {
 
       if (response.ok) {
         toast.success("Owner created successfully");
-        fetchOwners();
         formRef.current.reset();
         setImage(null);
         setTimeout(() => {
-          navigate(`/club/${slug}/pigeonOwners`);
+          navigate(`/pigeonOwners`);
         }, 3000);
       } else {
         toast.error("Failed to create Owner");
       }
     } catch (error) {
       toast.error("An error occurred");
-    }
-  };
-
-  const fetchOwners = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/v1/allowners"
-      ); // Adjust the URL to your backend endpoint
-      setOwners(response.data);
-    } catch (error) {
-      console.error("Error fetching owners:", error);
     }
   };
 
@@ -74,22 +61,6 @@ const PigeonOwnerForm = () => {
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
   };
-
-  const fetchClubTournaments = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/v1/tournaments/club/:${user.id}`
-      );
-      if (response.data.success) {
-        setTournaments(response.data.clubTournaments);
-      }
-    } catch (error) {
-      console.error("Error fetching clubs:", error);
-    }
-  };
-  useEffect(() => {
-    fetchClubTournaments();
-  }, []);
 
   return (
     <div className="d-flex flex-column align-items-start justify-content-center">
@@ -194,4 +165,4 @@ const PigeonOwnerForm = () => {
   );
 };
 
-export default PigeonOwnerForm;
+export default AdminPigeonForm;

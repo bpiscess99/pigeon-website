@@ -73,7 +73,7 @@ const Clubs = () => {
       dataIndex: "email",
     },
     {
-      title: "Date",
+      title: "Created Date",
       dataIndex: "createdAt",
       render: (_) => {
         return <Tag color="blue">{_.slice(0, 10)}</Tag>;
@@ -86,7 +86,7 @@ const Clubs = () => {
           <div className="d-flex gap-2">
             <Button
               size="sm"
-              variant="outline-info"
+              variant="outline-dark"
               onClick={() => handleEditClick(_)}
             >
               <EditOutlined key="edit" /> Edit
@@ -109,8 +109,9 @@ const Clubs = () => {
     <div>
       <Container className="d-flex justify-content-between align-items-center px-3">
         <h5>
-          total clubs <span className="badge text-bg-info">{clubs.length}</span>
+          Total clubs <Tag color="blue">{clubs.length}</Tag>
         </h5>
+
         <Button
           type="button"
           variant="none"
@@ -127,7 +128,7 @@ const Clubs = () => {
               actions={[
                 <Button
                   size="sm"
-                  variant="outline-info"
+                  variant="info"
                   onClick={() => handleEditClick(club)}
                 >
                   <EditOutlined key="edit" /> Edit

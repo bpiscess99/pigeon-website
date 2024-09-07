@@ -1,13 +1,15 @@
 // import { Select } from "antd";
-import { Breadcrumb } from "antd";
+import { Breadcrumb, TimePicker } from "antd";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import toast, { Toaster } from "react-hot-toast";
 import { NavLink, useNavigate } from "react-router-dom";
+import TournamentContext from "../Contexts/TournamentContext";
 
 const TournamentForm = () => {
   const navigate = useNavigate();
+  const { setTournaments } = useContext(TournamentContext);
   const user = JSON.parse(localStorage.getItem("user"));
   const [tournamentDetails, setTournamentDetails] = useState({
     owner_id: user.id,
@@ -90,9 +92,11 @@ const TournamentForm = () => {
           },
         }
       );
-      console.log(response);
 
       if (response.status === 201) {
+        setTournaments((prev) => {
+          return [...prev, response.data.newTournament];
+        });
         toast.success(response.data.message);
         if (user.role === 1) {
           setTimeout(() => {
@@ -112,51 +116,55 @@ const TournamentForm = () => {
 
   return (
     <>
-      <Breadcrumb
-        style={{ color: "#ffa76e" }}
-        className="px-2 pb-2"
-        items={[
-          {
-            title: "Dashboard",
-          },
-          {
-            title: (
-              <NavLink
-                style={({ isActive, isTransitioning }) => {
-                  return {
-                    color: isActive ? "black" : "#ffa76e",
-                    fontWeight: isActive ? "normal" : "bold",
-                    backgroundColor: isActive ? "#ffa76e" : "",
-                    viewTransitionName: isTransitioning ? "slide" : "",
-                  };
-                }}
-                className={"text-decoration-none"}
-                to={`/club/:${user.slug}/`}
-              >
-                Tournaments
-              </NavLink>
-            ),
-          },
-          {
-            title: (
-              <NavLink
-                style={({ isActive, isTransitioning }) => {
-                  return {
-                    color: isActive ? "black" : "#ffa76e",
-                    fontWeight: isActive ? "normal" : "bold",
-                    backgroundColor: isActive ? "#ffa76e" : "",
-                    viewTransitionName: isTransitioning ? "slide" : "",
-                  };
-                }}
-                to={`/club/:${user.slug}/createTournaments`}
-                className={"text-decoration-none"}
-              >
-                Create Tournament
-              </NavLink>
-            ),
-          },
-        ]}
-      />
+      {user.role === 0 ? (
+        <Breadcrumb
+          style={{ color: "#ffa76e" }}
+          className="px-2 pb-2"
+          items={[
+            {
+              title: "Dashboard",
+            },
+            {
+              title: (
+                <NavLink
+                  style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "black" : "#ffa76e",
+                      fontWeight: isActive ? "normal" : "bold",
+                      backgroundColor: isActive ? "#ffa76e" : "",
+                      viewTransitionName: isTransitioning ? "slide" : "",
+                    };
+                  }}
+                  className={"text-decoration-none"}
+                  to={`/club/:${user.slug}/tournaments`}
+                >
+                  Tournaments
+                </NavLink>
+              ),
+            },
+            {
+              title: (
+                <NavLink
+                  style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "black" : "#ffa76e",
+                      fontWeight: isActive ? "normal" : "bold",
+                      backgroundColor: isActive ? "#ffa76e" : "",
+                      viewTransitionName: isTransitioning ? "slide" : "",
+                    };
+                  }}
+                  to={`/club/:${user.slug}/createTournaments`}
+                  className={"text-decoration-none"}
+                >
+                  Create Tournament
+                </NavLink>
+              ),
+            },
+          ]}
+        />
+      ) : (
+        ""
+      )}
       <Form
         onSubmit={handleSubmit}
         className="d-flex gap-2 px-3 w-100 flex-column align-items-center"
@@ -204,17 +212,25 @@ const TournamentForm = () => {
             onChange={handleFormChange}
           />
         </Form.Group>
-        <Form.Group className="w-100">
+        <Form.Group className="w-100 ml-3">
           <Form.Label className="label-size" htmlFor="disabledTextInput">
             Start Time
           </Form.Label>
-          <Form.Control
+
+          <TimePicker
             size="sm"
             type="time"
-            placeholder="tournament Information"
+            placeholder="Start Time"
             name="startTime"
-            value={tournamentDetails.startTime}
-            onChange={handleFormChange}
+            className="px-5 mx-3"
+            onChange={(time, timeString) =>
+              setTournamentDetails((prevTournament) => {
+                return {
+                  ...prevTournament,
+                  startTime: timeString,
+                };
+              })
+            }
           />
         </Form.Group>
 
@@ -270,13 +286,20 @@ const TournamentForm = () => {
         </Form.Group>
         <Form.Group className="w-100">
           <Form.Label className="label-size">Note Time For Pigeons </Form.Label>
-          <Form.Control
+
+          <TimePicker
             size="sm"
             placeholder="Enter note time pigeons"
             name="noteTimeForPigeons"
-            type="time"
-            value={tournamentDetails.noteTimeForPigeons}
-            onChange={handleFormChange}
+            className="px-5 mx-3"
+            onChange={(time, timeString) =>
+              setTournamentDetails((prevTournament) => {
+                return {
+                  ...prevTournament,
+                  noteTimeForPigeons: timeString,
+                };
+              })
+            }
           />
         </Form.Group>
         <Form.Group className="w-100">
@@ -321,18 +344,6 @@ const TournamentForm = () => {
             })}
           </Form.Select>
         </Form.Group>
-
-        {/* <Form.Group className="w-100">
-          <Form.Label className="label-size">participatingLoft</Form.Label>
-          <Select
-            className="w-50 px-2"
-            mode="multiple"
-            size={"large"}
-            placeholder="Please select"
-            onChange={handleLoftChange}
-            options={owners}
-          />
-        </Form.Group> */}
 
         <Form.Group className="w-100">
           <Form.Label className="label-size"> Type </Form.Label>

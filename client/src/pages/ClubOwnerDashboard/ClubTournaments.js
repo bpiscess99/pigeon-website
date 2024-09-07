@@ -122,14 +122,16 @@ const ClubTournaments = () => {
     {
       title: "Participating Lofts",
       align: "center",
-      dataIndex: "actions",
+      dataIndex: "startTime",
       render: (rowRecord) => {
         return (
           <Button
             size="sm"
             variant="success"
             onClick={() => {
-              navigate(`/club/${user.slug}/pigeonOwnerForm`);
+              navigate(`/club/${user.slug}/pigeonOwnerForm`, {
+                startTime: rowRecord,
+              });
             }}
           >
             Participants
@@ -141,7 +143,6 @@ const ClubTournaments = () => {
   const rowClassName = (record, index) => {
     return index % 2 === 0 ? "striped-row" : ""; // Apply class to every other row
   };
-  console.log(tournaments);
 
   return (
     <div className="px-2">
@@ -164,7 +165,7 @@ const ClubTournaments = () => {
                   };
                 }}
                 className={"text-decoration-none"}
-                to={`/club/:${user.slug}/`}
+                to={`/club/:${user.slug}/tournaments`}
               >
                 Tournaments
               </NavLink>

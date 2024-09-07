@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {  Button, Container, Image } from 'react-bootstrap';
+import {  Button,  Image } from 'react-bootstrap';
 import toast, { Toaster } from 'react-hot-toast';
 import { Avatar, Card, message, Popconfirm, Table, Tag } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import TournamentContext from './Contexts/TournamentContext';
 
 const TournamentsContainer = () => {
-    const {tournaments}=useContext(TournamentContext)
-    const [isTabular,setIsTabular]=useState(true);
+    const {tournaments, fetchTournaments}=useContext(TournamentContext)
+    const [isTabular]=useState(true);
     const columns = [
       {
         title: "Tournament",
@@ -110,13 +110,16 @@ const TournamentsContainer = () => {
               navigate(`/tournaments/:${_._id}`,{state:{tournament:_}})
             }}
           >
-            <Button variant="outline-primary" size='sm'>Update</Button>
+            <Button variant="primary" size='sm'>Update</Button>
             <Toaster />
           </Popconfirm>
         </div>
         }
       }
     ];   
+    useEffect(()=>{
+      fetchTournaments()
+    },[])
     const { Meta } = Card;
     const navigate =useNavigate()
    return (

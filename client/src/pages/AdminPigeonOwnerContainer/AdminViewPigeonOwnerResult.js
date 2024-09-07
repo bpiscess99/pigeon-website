@@ -3,17 +3,15 @@ import React from "react";
 import { Card, Col, Container, Image, Row } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 
-const PegionOwnersResult = () => {
+const AdminViewPigeonOwnerResult = () => {
   const { owner } = useLocation().state;
   const user = JSON.parse(localStorage.getItem("user"));
-
-  // console.log(owner.pigeonsResults);
 
   return (
     <Container>
       <Breadcrumb
         style={{ color: "#ffa76e" }}
-        className="px-2 pb-2"
+        className="px-2 py-3"
         items={[
           {
             title: "Dashboard",
@@ -30,7 +28,7 @@ const PegionOwnersResult = () => {
                   };
                 }}
                 className={"text-decoration-none"}
-                to={`/club/:${user.slug}/pigeonOwners`}
+                to={`/pigeonOwners`}
               >
                 Pigeon Owners
               </NavLink>
@@ -38,20 +36,16 @@ const PegionOwnersResult = () => {
           },
           {
             title: (
-              <NavLink
-                style={({ isActive, isTransitioning }) => {
-                  return {
-                    color: isActive ? "black" : "#ffa76e",
-                    fontWeight: isActive ? "normal" : "bold",
-                    backgroundColor: isActive ? "#ffa76e" : "",
-                    viewTransitionName: isTransitioning ? "slide" : "",
-                  };
+              <p
+                style={{
+                  backgroundColor: "#ffa76e",
+                  borderRadius: "5px",
+                  padding: "0px 4px",
                 }}
-                to={`/club/:${user.slug}/pigeonOwnerResults`}
                 className={"text-decoration-none"}
               >
                 {owner.name}
-              </NavLink>
+              </p>
             ),
           },
         ]}
@@ -141,4 +135,4 @@ const PegionOwnersResult = () => {
   );
 };
 
-export default PegionOwnersResult;
+export default AdminViewPigeonOwnerResult;

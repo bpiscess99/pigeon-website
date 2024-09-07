@@ -43,14 +43,9 @@ const BannerContainer = () => {
   return (
     <Container>
       <div className="d-flex justify-content-between align-items-center">
-        <h1>
-          <Tag className="fs-3 p-1" color="orange">
-            Banners
-          </Tag>
-        </h1>
-        <h1 className="fs-3">
-          <Tag color="pink">Total Banners: {images.length}</Tag>
-        </h1>
+        <h4>
+          total banners <Tag color="blue"> {images.length}</Tag>
+        </h4>
         <Link
           style={{
             textDecoration: "none",

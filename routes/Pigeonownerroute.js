@@ -9,6 +9,7 @@ import {
   uploadImage,
   createPegionResults,
   getPigeonOwnersOfTournament,
+  getTournamentOfPigeonOwners,
 } from "../controllers/Pigeonownercontroller.js";
 
 const router = express.Router();
@@ -18,6 +19,11 @@ router.post("/owner", uploadImage, createOwner);
 router.get("/owners", getOwner);
 
 router.get("/pigeonOwners/:tournamentId", getPigeonOwnersOfTournament);
+
+router.get(
+  "/pigeonOwners/getPigeonOwnerTournament/:pigeonOwnerId",
+  getTournamentOfPigeonOwners
+);
 
 // get pegion results
 router.get("/allowners", getallowner);

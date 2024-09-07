@@ -12,7 +12,8 @@ import duration from "dayjs/plugin/duration"; // Import the correct duration plu
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 dayjs.extend(customParseFormat);
 dayjs.extend(duration); // Extend the duration plugin
-const PigeonResultsForm = () => {
+
+const AdminAddPigeonOwnerResult = () => {
   const { owner } = useLocation().state;
   const [resultsForm, setResultsForm] = useState({
     pigeonOwnerId: owner && owner._id,
@@ -77,7 +78,7 @@ const PigeonResultsForm = () => {
       if (response.status === 200) {
         toast.success(response.data.msg);
         setTimeout(() => {
-          navigate(`/club/${slug}/pigeonOwners`);
+          navigate(`/pigeonOwners`);
         }, 3000);
       }
     } catch (error) {
@@ -110,9 +111,9 @@ const PigeonResultsForm = () => {
   //   });
   // }, [resultsForm]);
 
-  useEffect(() => {
-    fetchStartTime();
-  });
+  //   useEffect(() => {
+  //     // fetchStartTime();
+  //   });
   return (
     <>
       <Breadcrumb
@@ -134,7 +135,7 @@ const PigeonResultsForm = () => {
                   };
                 }}
                 className={"text-decoration-none"}
-                to={`/club/:${slug}/pigeonOwners`}
+                to={`/pigeonOwners`}
               >
                 Pigeon Owners
               </NavLink>
@@ -143,8 +144,13 @@ const PigeonResultsForm = () => {
           {
             title: (
               <p
-                style={{ color: "#ffa76e", fontWeight: "bolder" }}
+                // style={{ color: "#ffa76e", fontWeight: "bolder" }}
                 className={"text-decoration-none"}
+                style={{
+                  backgroundColor: "#ffa76e",
+                  borderRadius: "5px",
+                  padding: "0px 4px",
+                }}
               >
                 Add Pigeon Result
               </p>
@@ -321,4 +327,4 @@ const PigeonResultsForm = () => {
   );
 };
 
-export default PigeonResultsForm;
+export default AdminAddPigeonOwnerResult;

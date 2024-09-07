@@ -8,13 +8,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ClubsProvider } from "../src/pages/Contexts/ClubsContext";
 import { TournamentProvider } from "../src/pages/Contexts/TournamentContext";
 import { PigeonProvider } from "../src/pages/Contexts/PigeonContext";
+import { BannerProvider } from "../src/pages/Contexts/BannerContext";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <ClubsProvider>
       <TournamentProvider>
         <PigeonProvider>
-          <App />
+          <BannerProvider>
+            <App />
+          </BannerProvider>
         </PigeonProvider>
       </TournamentProvider>
     </ClubsProvider>
