@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 
 function NavbarComponent() {
   const user = localStorage.getItem("user");
-
+  
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -92,53 +92,3 @@ function NavbarComponent() {
 
 export default NavbarComponent;
 
-
-  // const items = [
-  //   {
-  //     key: "1",
-  //     label: "Tournament",
-  //     children: [
-  //       {
-  //         key: `/club/${slug}/tournaments`,
-  //         label: "Tournaments",
-  //       },
-  //       {
-  //         type: "divider",
-  //       },
-  //       {
-  //         key: `/club/${slug}/createTournaments`,
-  //         label: "Create Tournament",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     key: "2",
-  //     label: "Pigeon Owner",
-  //     children: [
-  //       {
-  //         key: `/club/${slug}/pigeonOwners`,
-  //         label: "Pigeon Owner",
-  //       },
-  //       {
-  //         type: "divider",
-  //       },
-  //       {
-  //         key: `/club/${slug}/pigeonOwnerForm`,
-  //         label: "Pigeon Form",
-  //       },
-  //     ],
-  //   },
-  //   // {
-  //   //   key: "3",
-  //   //   label: "Results",
-  //   //   children: [
-  //   //     {
-  //   //       key: `/club/${slug}/pigeonResultForm`,
-  //   //       label: "Create Results",
-  //   //     },
-  //   //     {
-  //   //       type: "divider",
-  //   //     },
-  //   //   ],
-  //   // },
-  // ];

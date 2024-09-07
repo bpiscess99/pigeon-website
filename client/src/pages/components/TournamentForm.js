@@ -24,7 +24,6 @@ const TournamentForm = () => {
     continueDays: "",
     status_: "in active",
     type: "",
-    participatingLoft: [],
     numberOfPrizes: "",
     prize1: "",
     prize2: "",
@@ -55,21 +54,41 @@ const TournamentForm = () => {
   }, []);
 
   const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setTournamentDetails((prevTournament) => {
-      return {
-        ...prevTournament,
-        [name]: value,
-      };
-    });
+    const { name, value, type, files } = e.target;
+
+    if (type === "file") {
+      // Handle the image file
+      const file = files[0]; // Get the first selected file
+      setTournamentDetails((prevTournament) => {
+        return {
+          ...prevTournament,
+          [name]: file, // Store the file in the state
+        };
+      });
+    } else {
+      // Handle text/other input types
+      setTournamentDetails((prevTournament) => {
+        return {
+          ...prevTournament,
+          [name]: value,
+        };
+      });
+    }
   };
+  console.log(tournamentDetails);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let response;
     try {
       response = await axios.post(
         "http://localhost:8080/api/v1/tournaments/",
-        tournamentDetails
+        tournamentDetails,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Required for file uploads
+          },
+        }
       );
       console.log(response);
 
@@ -90,15 +109,6 @@ const TournamentForm = () => {
       toast.error(error.response.data.message);
     }
   };
-
-  // const handleLoftChange = (value) => {
-  //   setTournamentDetails((prevTournament) => {
-  //     return {
-  //       ...prevTournament,
-  //       participatingLoft: value,
-  //     };
-  //   });
-  // };
 
   return (
     <>
@@ -121,7 +131,7 @@ const TournamentForm = () => {
                   };
                 }}
                 className={"text-decoration-none"}
-                to={`/club/:${user.slug}/tournaments`}
+                to={`/club/:${user.slug}/`}
               >
                 Tournaments
               </NavLink>
@@ -176,7 +186,7 @@ const TournamentForm = () => {
             size="sm"
             name="image"
             type="file"
-            value={tournamentDetails.image}
+            // value={tournamentDetails.image}
             onChange={handleFormChange}
           />
         </Form.Group>

@@ -3,8 +3,8 @@ import crypto from "crypto";
 import multer from "multer";
 import path from "path";
 import Clubsmodal from "../models/Clubsmodal.js";
-import Pigeonwnermodal from "../models/Pigeonwnermodal.js";
 import { log } from "console";
+// import Pigeonwnermodal from "../models/Pigeonwnermodal.js";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -23,7 +23,6 @@ export const createTournament = async (req, res) => {
   try {
     const {
       owner_id,
-      image,
       tournamentName,
       tournamentInformation,
       category,
@@ -50,6 +49,7 @@ export const createTournament = async (req, res) => {
         message: "owner_id, tournamentName, startDate are required",
       });
     }
+    console.log(req.file);
     const clubOwner = await Clubsmodal.findById({ _id: owner_id });
     if (!clubOwner) {
       return res.status(400).json({
@@ -57,8 +57,9 @@ export const createTournament = async (req, res) => {
         error: error.message,
       });
     }
+    log(req.file);
     const newTournament = await Tournament({
-      image,
+      image: req.file ? req.file.filename : null,
       tournamentName,
       tournamentInformation,
       category,

@@ -81,6 +81,12 @@ const tournamentSchema = mongoose.Schema(
     prize5: {
       type: Number,
     },
+    pigeonOwners: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "owner",
+      },
+    ],
   },
   {
     timestamps: true,

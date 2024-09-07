@@ -4,6 +4,7 @@ import crypto from "crypto";
 import multer from "multer";
 import path from "path";
 import Tournament from "../models/tournamentModel.js";
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/"); // Directory for storing files
@@ -15,7 +16,6 @@ const storage = multer.diskStorage({
     cb(null, uniqueName);
   },
 });
-
 const upload = multer({ storage });
 
 export const getPigeonOwnersOfTournament = async (req, res) => {
@@ -59,8 +59,10 @@ export const createOwner = async (req, res) => {
       slug: `${name}-${Date.now()}`,
       image: req.file ? req.file.filename : null,
     });
-
     await owner.save();
+    isTournamentExist.pigeonOwners.push(owner._id);
+    // updating tournament
+    await isTournamentExist.save();
     res.status(201).json({ success: true, data: owner });
   } catch (error) {
     console.error("Error creating Owner:", error);

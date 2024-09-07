@@ -31,7 +31,7 @@ const LandingClubs = () => {
               {/* Left Side - Image */}
               <Col md={5} className="text-center">
                 <Image
-                  src={tournament.image}
+                  src={`http://localhost:8080/uploads/${tournament.image}`}
                   alt={tournament.tournamentName}
                   fluid
                   className="shadow-lg rounded"

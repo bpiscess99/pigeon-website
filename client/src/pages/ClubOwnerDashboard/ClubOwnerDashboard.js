@@ -6,7 +6,6 @@ import axios from "axios";
 
 const ClubOwnerDashboard = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  // const user = JSON.parse(localStorage.getItem("user"));
   console.log(user);
 
   const [tournaments, setTournaments] = useState([]);

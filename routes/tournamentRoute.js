@@ -13,7 +13,8 @@ import {
 const router = express.Router();
 router.route("/club/:club_id").get(getTournamentsOfClubs);
 
-router.route("/").get(getAllTournaments).post(createTournament);
+router.route("/").get(getAllTournaments);
+router.route("/").post(uploadImage, createTournament);
 
 router
   .route("/:tournamentId")

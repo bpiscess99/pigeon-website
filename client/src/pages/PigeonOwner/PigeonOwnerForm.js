@@ -25,7 +25,9 @@ const PigeonOwnerForm = () => {
     formData.append("city", event.target.city.value);
     if (image) {
       formData.append("image", image);
+      console.log(image);
     }
+
     formData.append("tournament", event.target.tournament.value);
     try {
       const response = await fetch("http://localhost:8080/api/v1/owner", {
