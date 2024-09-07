@@ -86,7 +86,7 @@ const TournamentForm = () => {
         tournamentDetails,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Required for file uploads
+            "Content-Type": "multipart/form-data",
           },
         }
       );

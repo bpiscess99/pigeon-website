@@ -5,18 +5,14 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from 'react-router-dom';
 
 function NavbarComponent() {
-  const user = localStorage.getItem("user");
-  
+ 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
       <Navbar.Brand>Pigeon</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-        {
-          user.role === 1
-          ?
-        (<>
+        
           <Nav className="ms-auto">
           <Nav.Link >
             <NavLink to={"/clubs"}></NavLink>
@@ -52,41 +48,10 @@ function NavbarComponent() {
             </NavDropdown>
 
           </Nav>
-        </>)  
-        :
-        (
-          <>
-          <Nav className="ms-auto">
-          <Nav.Link >
-            <NavLink to={""}></NavLink>
-          </Nav.Link>
-            <Nav.Link>
-            </Nav.Link>
-            <NavDropdown title="Tournaments">
-              <NavDropdown.Item>
-                <NavLink to={`/club/${user.slug}/tournaments`}>tournaments</NavLink>
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item>
-                <NavLink to={`/club/${user.slug}/createTournaments`}>Create tournament</NavLink>
-              </NavDropdown.Item> 
-            </NavDropdown>
-            <NavDropdown title="Participants">
-              <NavDropdown.Item>
-                <NavLink to={`/club/${user.slug}/pigeonOwners`}>Participants</NavLink>
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item>
-                <NavLink to={`/club/${user.slug}/pigeonOwnerForm`}>Create Particiapant</NavLink>
-              </NavDropdown.Item> 
-            </NavDropdown>
-          </Nav>
-        </>
-        )
-        }
-      </Navbar.Collapse>
-      </Container>
-    </Navbar>
+
+        </Navbar.Collapse>
+        </Container>
+        </Navbar>
   );
 }
 

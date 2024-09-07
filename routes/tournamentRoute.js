@@ -7,6 +7,7 @@ import {
   updateTournament,
   getTournamentsOfClubs,
   uploadImage,
+  getAllTournamentsWithPigeonOwners,
 } from "../controllers/tournamentController.js";
 // import { requiresingnin } from "../middlewares/Authmiddleware.js";
 
@@ -15,6 +16,10 @@ router.route("/club/:club_id").get(getTournamentsOfClubs);
 
 router.route("/").get(getAllTournaments);
 router.route("/").post(uploadImage, createTournament);
+
+router
+  .route("/tournamentsWithPigeonOwners")
+  .get(getAllTournamentsWithPigeonOwners);
 
 router
   .route("/:tournamentId")

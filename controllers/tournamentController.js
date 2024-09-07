@@ -205,4 +205,20 @@ export const getTournamentsOfClubs = async (req, res) => {
   }
 };
 
+export const getAllTournamentsWithPigeonOwners = async (req, res) => {
+  try {
+    const tournaments = await Tournament.find({}).populate("pigeonOwners");
+    return res.status(200).json({
+      success: false,
+      message: "Tournaments",
+      tournaments,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      message: "Error",
+      error: error.message,
+    });
+  }
+};
+
 export const uploadImage = upload.single("image");

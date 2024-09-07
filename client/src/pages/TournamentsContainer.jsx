@@ -18,11 +18,11 @@ const TournamentsContainer = () => {
         dataIndex: "category",
       },
       {
-        title: "Number Of Prizes",
+        title: "No Prizes",
         dataIndex: "numberOfPrizes",
       },
       {
-        title: "Number Of Pigeons",
+        title: "No Pigeons",
         dataIndex: "numberOfPigeons",
       },
       {
@@ -46,7 +46,7 @@ const TournamentsContainer = () => {
         },
       },
       {
-        title: "Tournament Information",
+        title: "Tournament info",
         dataIndex: "tournamentInformation",
       },
       {
@@ -58,7 +58,7 @@ const TournamentsContainer = () => {
         dataIndex: "continueDays",
       },
       {
-        title: "Number of Days",
+        title: "No Days",
         dataIndex: "numberOfDays",
       },
       {
@@ -69,18 +69,12 @@ const TournamentsContainer = () => {
         title: "Participating Loft",
         dataIndex: "participatingLoft",
         render: (_) => {
-          if (_) {
-            return _.map((_, index) => (
-              <Tag color="blue" key={index}>
-                {_}
-              </Tag>
-            ));
-          }
+          return <Button size='sm' variant='success'>Participants</Button>  
         },
       },
   
       {
-        title: "First Prize",
+        title: "1st Prize",
         dataIndex: "prize1",
       },
       {
@@ -126,7 +120,7 @@ const TournamentsContainer = () => {
     const { Meta } = Card;
     const navigate =useNavigate()
    return (
-    <Container >
+    <div className='px-2' >
     <h5 className="card-title">total tournaments <Tag color='blue'>{tournaments.length}</Tag></h5>
     {!isTabular ?
       <div className='d-flex gap-2 flex-wrap justify-content-center'>
@@ -185,7 +179,7 @@ const TournamentsContainer = () => {
         rowKey={(row)=>row._id || row.id}
       />  
       }
-    </Container>
+    </div>
   )
 }
 

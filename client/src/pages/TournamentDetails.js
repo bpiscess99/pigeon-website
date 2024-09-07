@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { message, Popconfirm, Select, Tag } from "antd";
+import { message, Popconfirm } from "antd";
 
 const TournamentDetails = () => {
   const navigate = useNavigate();
@@ -264,19 +264,6 @@ const TournamentDetails = () => {
                 );
               })}
             </Form.Select>
-          </Form.Group>
-
-          <Form.Group className="w-100">
-            <Form.Label className="label-size">participatingLoft</Form.Label>
-            <Select
-              className="w-50 px-2"
-              mode="multiple"
-              size={"large"}
-              placeholder="Please select"
-              onChange={handleLoftChange}
-              options={owners}
-              defaultValue={tournamentDetails.participatingLoft}
-            />
           </Form.Group>
 
           <Form.Group className="w-100">
