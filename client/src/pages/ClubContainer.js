@@ -10,7 +10,20 @@ const ClubContainer = () => {
           className="px-1 pb-2"
           items={[
             {
-              title: "Dashboard",
+              title: (
+                <NavLink
+                  to={"/dashboard"}
+                  style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "orange" : "black",
+                      fontWeight: isActive ? "bold" : "normal",
+                      viewTransitionName: isTransitioning ? "slide" : "",
+                    };
+                  }}
+                >
+                  Dashboard
+                </NavLink>
+              ),
             },
             {
               title: (

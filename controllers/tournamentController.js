@@ -95,7 +95,7 @@ export const createTournament = async (req, res) => {
 
 export const getAllTournaments = async (req, res) => {
   try {
-    const tournaments = await Tournament.find({});
+    const tournaments = await Tournament.find({}).sort({ _id: -1 });
     return res.status(200).json({
       success: false,
       message: "Tournaments",
@@ -191,7 +191,7 @@ export const getTournamentsOfClubs = async (req, res) => {
 
     const clubTournaments = await Tournament.find({
       club_owner: club_id.slice(1),
-    });
+    }).sort({ _id: -1 });
     res.status(200).json({
       success: true,
       msg: "Tournaments",
@@ -207,7 +207,9 @@ export const getTournamentsOfClubs = async (req, res) => {
 
 export const getAllTournamentsWithPigeonOwners = async (req, res) => {
   try {
-    const tournaments = await Tournament.find({}).populate("pigeonOwners");
+    const tournaments = await Tournament.find({})
+      .populate("pigeonOwners")
+      .sort({ _id: -1 });
     return res.status(200).json({
       success: false,
       message: "Tournaments",

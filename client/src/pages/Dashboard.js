@@ -111,27 +111,25 @@ const Dashboard = () => {
           <div className="d-flex gap-1 py-2 justify-content-center flex-wrap align-items-center">
             {clubs.map((club, index) => (
               <div
-                className="border rounded border-warning  px-3 pt-2"
+                className="rounded px-3 py-1"
+                style={{ border: "2px solid #E85C0D " }}
                 key={index}
               >
-                <p>
-                  <Link
-                    style={{
-                      textDecoration: "none",
-                      fontWeight: "bold",
-                      color: "#E85C0D",
-                      // width: "100px",
-                    }}
-                    to={`/club/${club.slug}/tournaments`}
-                  >
-                    {club.cname}
-                  </Link>
-                </p>
+                <Link
+                  style={{
+                    textDecoration: "none",
+                    fontWeight: "600",
+                    color: "#E85C0D",
+                  }}
+                  to={`/club/${club.slug}/tournaments`}
+                >
+                  {club.cname}
+                </Link>
               </div>
             ))}
           </div>
 
-          <div className="d-flex py-3 justify-content-center align-items-center flex-column">
+          <div className="d-flex py-3 px-2 justify-content-center align-items-center flex-column">
             <div className="px-3">
               <div className=" me-3 d-flex align-items-center gap-3">
                 <Select
@@ -153,25 +151,23 @@ const Dashboard = () => {
                     })}
                 </Select>
               </div>
-              <div>
-                <h5 style={{ marginTop: "7px" }}>
-                  {tournament.tournamentName}
-                </h5>
-                <span style={{ marginLeft: "7px" }}>
-                  - Start Time :{tournament.startTime}{" "}
-                </span>
+              <div className="d-flex pt-2 justify-content-center align-items-center">
+                <h4 style={{ marginTop: "7px" }}>
+                  {tournament.tournamentName} - Start Time :
+                  {tournament.startTime}{" "}
+                </h4>
               </div>
               <div>
-                <p className="lead">
+                <h5>
                   Total Pigeons: {tournament.numberOfPigeons}, helper pigeons :
                   <strong> {tournament.helperPigeons} </strong> Is live :{" "}
-                  <Tag color="blue"> {tournament.status_} </Tag>,{" "}
-                </p>
+                  <Tag color="blue"> {tournament.status_} </Tag>{" "}
+                </h5>
               </div>
             </div>
             <table className="results-table">
               <thead>
-                <tr>
+                <tr className="text-center">
                   <th>Sr No.</th>
                   <th>Pigeon Owner</th>
                   <th>No of Pigeons</th>
@@ -185,7 +181,7 @@ const Dashboard = () => {
                   <th>Total</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="text-center">
                 {results.length > 0 ? (
                   results.map((result, index) => (
                     <tr key={index}>

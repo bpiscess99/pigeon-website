@@ -24,7 +24,7 @@ function NavbarComponent() {
           </Nav.Link>
             <Nav.Link>
             </Nav.Link>
-            <NavDropdown title="Dashboard">
+            <NavDropdown title="Clubs Detail">
               <NavDropdown.Item>
                 <NavLink style={({ isActive, isTransitioning }) => {
                     return {
@@ -67,6 +67,27 @@ function NavbarComponent() {
                 className={"text-decoration-none"} to={"/tournaments/tournamentForm"}>Create Tournament</NavLink>
               </NavDropdown.Item> 
             </NavDropdown>
+
+            <NavDropdown title="Pigeon Owners">
+              <NavDropdown.Item>
+                <NavLink style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "blue" : "black",
+
+                    };
+                  }} className={"text-decoration-none"} to={"/pigeonOwners"}>Pigeon Owners</NavLink>
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item>
+                <NavLink style={({ isActive, isTransitioning }) => {
+                    return {
+                      color: isActive ? "blue" : "black",
+                    };
+                  }} className={"text-decoration-none"} to={"/pigeonOwners/pigeonOwnerForm"}>Create Pigeon Owner</NavLink>
+              </NavDropdown.Item> 
+            </NavDropdown>
+
+
             <NavDropdown title="Banners">
               <NavDropdown.Item>
                 <NavLink style={({ isActive, isTransitioning }) => {

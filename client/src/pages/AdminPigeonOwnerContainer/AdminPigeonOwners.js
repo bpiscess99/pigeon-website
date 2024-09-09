@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { Button, Image, Table } from "react-bootstrap";
@@ -9,12 +9,12 @@ import TournamentContext from "../Contexts/TournamentContext";
 
 const AdminPigeonOwners = () => {
   const [owners, setOwners] = useState([]);
-  //   const [tournaments, setTournaments] = useState([]);
+  const [tournaments, setTournaments] = useState([]);
   const [editingOwner, setEditingOwner] = useState(null);
   const [deletingOwner, setDeletingOwner] = useState(null);
-  const user = JSON.parse(localStorage.getItem("user"));
+  // const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-  const { fetchTournaments, tournaments } = useContext(TournamentContext);
+
   const handleEditClick = (owner) => {
     setEditingOwner(owner); // Open the modal with owner data
   };
@@ -83,8 +83,76 @@ const AdminPigeonOwners = () => {
     fetchTournaments();
   }, []);
 
+  const fetchTournaments = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/tournaments/`
+      );
+
+      setTournaments(response.data.tournaments);
+      if (response.data.tournaments.length > 0) {
+        fetchTournamentPigeons(response.data.tournaments[0]._id);
+      }
+    } catch (error) {
+      console.error("Error fetching clubs:", error);
+    }
+  };
+
   return (
     <div>
+      <Breadcrumb
+        className="px-4 pb-2"
+        items={[
+          {
+            title: (
+              <NavLink
+                to={"/dashboard"}
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "orange" : "black",
+                    fontWeight: isActive ? "bold" : "normal",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+              >
+                Dashboard
+              </NavLink>
+            ),
+          },
+          {
+            title: (
+              <NavLink
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "orange" : "black",
+                    fontWeight: isActive ? "bold" : "normal",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+                to={"/pigeonOwners"}
+              >
+                Pigeon Owners
+              </NavLink>
+            ),
+          },
+          {
+            title: (
+              <NavLink
+                style={({ isActive, isTransitioning }) => {
+                  return {
+                    color: isActive ? "orange" : "black",
+                    fontWeight: isActive ? "bold" : "normal",
+                    viewTransitionName: isTransitioning ? "slide" : "",
+                  };
+                }}
+                to={"/pigeonOwners/pigeonOwnerForm"}
+              >
+                Create Pigeon Owner
+              </NavLink>
+            ),
+          },
+        ]}
+      />
       <div className="d-flex px-2 justify-content-center gap-2">
         {tournaments &&
           tournaments.map((_, index) => {

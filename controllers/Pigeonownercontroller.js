@@ -25,8 +25,8 @@ export const getPigeonOwnersOfTournament = async (req, res) => {
 
     const pigeonOwners = await Pigeonwnermodal.find({
       tournament: tournamentId.slice(1),
-    });
-    console.log(pigeonOwners);
+    }).sort({ _id: -1 });
+    // console.log(pigeonOwners);
 
     res.status(200).json({
       success: true,

@@ -27,7 +27,6 @@ const AdminAddPigeonOwnerResult = () => {
     total: "",
   });
   const [startTime, setStartTime] = useState("");
-  const slug = JSON.parse(localStorage.getItem("user")).slug;
   const navigate = useNavigate();
   const returnTimes = [
     resultsForm.firstPigeonReturnTime,
