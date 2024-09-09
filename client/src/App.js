@@ -83,9 +83,9 @@ function App() {
         </Route>
 
         {/* club owner dashboard */}
-        <Route path="club/:id/dashboard" element={<ClubOwnerDashboard />} />
+        <Route path="club/:id/" element={<ClubOwnerDashboard />} />
         <Route path="club/:id/" element={<ClubDashboardContainer />}>
-          <Route path="tournaments" element={<ClubTournaments />} />
+          <Route path="tournaments" index element={<ClubTournaments />} />
           <Route path="createTournaments" element={<TournamentForm />} />
           {/*pigeon owners  */}
           <Route path="pigeonOwners" element={<PigeonOwnerContainer />} />

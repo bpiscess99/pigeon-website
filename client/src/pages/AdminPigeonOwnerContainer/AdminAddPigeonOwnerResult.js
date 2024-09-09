@@ -1,4 +1,4 @@
-import { Breadcrumb, TimePicker } from "antd";
+import { Breadcrumb, Input, TimePicker } from "antd";
 import axios from "axios";
 import React, { useEffect } from "react";
 
@@ -12,7 +12,6 @@ import duration from "dayjs/plugin/duration"; // Import the correct duration plu
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 dayjs.extend(customParseFormat);
 dayjs.extend(duration); // Extend the duration plugin
-
 const AdminAddPigeonOwnerResult = () => {
   const { owner } = useLocation().state;
   const [resultsForm, setResultsForm] = useState({
@@ -30,42 +29,15 @@ const AdminAddPigeonOwnerResult = () => {
   const [startTime, setStartTime] = useState("");
   const slug = JSON.parse(localStorage.getItem("user")).slug;
   const navigate = useNavigate();
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setResultsForm((prevResultsForm) => {
-      return {
-        ...prevResultsForm,
-        [name]: value,
-      };
-    });
-  };
-
-  const calculateTotalTime = () => {
-    const times = [
-      resultsForm.firstPigeonReturnTime,
-      resultsForm.secondPigeonReturnTime,
-      resultsForm.thirdPigeonReturnTime,
-      resultsForm.fourthPigeonReturnTime,
-      resultsForm.fifthPigeonReturnTime,
-      resultsForm.sixthPigeonReturnTime,
-      resultsForm.seventhPigeonReturnTime,
-    ];
-    let totalTime = 0;
-    times.forEach((timeString) => {
-      if (timeString) {
-        const time = dayjs(startTime, "HH:mm:ss");
-        const returnTime = dayjs(timeString, "HH:mm:ss");
-        const timeDifference = returnTime.diff(time, "second"); // Difference in seconds
-        totalTime += timeDifference;
-      }
-    });
-
-    const totalDuration = dayjs
-      .duration(totalTime, "seconds")
-      .format("HH:mm:ss");
-
-    return totalDuration;
-  };
+  const returnTimes = [
+    resultsForm.firstPigeonReturnTime,
+    resultsForm.secondPigeonReturnTime,
+    resultsForm.thirdPigeonReturnTime,
+    resultsForm.fourthPigeonReturnTime,
+    resultsForm.fifthPigeonReturnTime,
+    resultsForm.sixthPigeonReturnTime,
+    resultsForm.seventhPigeonReturnTime,
+  ];
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -90,30 +62,75 @@ const AdminAddPigeonOwnerResult = () => {
   const fetchStartTime = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/v1//pigeonOwners/getPigeonOwnerTournament/:${owner._id}`
+        `http://localhost:8080/api/v1//pigeonOwners/getPigeonOwnerTournament/:${id}`
       );
-      console.log(response);
-
-      if (response.data.success) {
-        setStartTime(response.data.startTime);
-      }
+      setStartTime(response.data.startTime);
     } catch (error) {
       console.error("Error fetching clubs:", error);
     }
   };
-  // useEffect(() => {
-  //   const totalTime = calculateTotalTime();
-  //   setResultsForm((prevResultsForm) => {
-  //     return {
-  //       ...prevResultsForm,
-  //       total: totalTime,
-  //     };
-  //   });
-  // }, [resultsForm]);
 
-  //   useEffect(() => {
-  //     // fetchStartTime();
-  //   });
+  function calculateTimeDifference(startTime, returnTime) {
+    if (!returnTime) return { hours: 0, minutes: 0, seconds: 0 }; // Skip if return time is not provided
+
+    // Split the startTime and returnTime into [hours, minutes, seconds]
+    const [startHrs, startMins, startSecs] = startTime.split(":").map(Number);
+    const [endHrs, endMins, endSecs] = returnTime.split(":").map(Number);
+
+    // Convert the start and end times into total seconds
+    const startTotalSecs = startHrs * 3600 + startMins * 60 + startSecs;
+    const endTotalSecs = endHrs * 3600 + endMins * 60 + endSecs;
+
+    // Calculate the difference in seconds
+    let diffSecs = endTotalSecs - startTotalSecs;
+
+    // Convert the difference back into hours, minutes, and seconds
+    const diffHrs = Math.floor(diffSecs / 3600); // Hours
+    diffSecs %= 3600;
+    const diffMins = Math.floor(diffSecs / 60); // Minutes
+    const diffRemainingSecs = diffSecs % 60; // Seconds
+
+    return { hours: diffHrs, minutes: diffMins, seconds: diffRemainingSecs };
+  }
+
+  function calculateTotalTime(startTime, returnTimes) {
+    let totalHours = 0;
+    let totalMinutes = 0;
+    let totalSeconds = 0;
+
+    returnTimes.forEach((returnTime) => {
+      const { hours, minutes, seconds } = calculateTimeDifference(
+        startTime,
+        returnTime
+      );
+      totalHours += hours;
+      totalMinutes += minutes;
+      totalSeconds += seconds;
+    });
+
+    // Adjust total seconds to minutes if more than 60 seconds
+    totalMinutes += Math.floor(totalSeconds / 60);
+    totalSeconds = totalSeconds % 60;
+
+    // Adjust total minutes to hours if more than 60 minutes
+    totalHours += Math.floor(totalMinutes / 60);
+    totalMinutes = totalMinutes % 60;
+
+    return `${totalHours}:${totalMinutes}:${totalSeconds}`;
+  }
+
+  useEffect(() => {
+    fetchStartTime(owner._id);
+  }, []);
+
+  useEffect(() => {
+    const total = calculateTotalTime(startTime, returnTimes);
+    setResultsForm((prev) => ({
+      ...prev,
+      total,
+    }));
+  }, [startTime, returnTimes]); // Effect depends on startTime and returnTimes
+
   return (
     <>
       <Breadcrumb
@@ -144,13 +161,8 @@ const AdminAddPigeonOwnerResult = () => {
           {
             title: (
               <p
-                // style={{ color: "#ffa76e", fontWeight: "bolder" }}
+                style={{ color: "#ffa76e", fontWeight: "bolder" }}
                 className={"text-decoration-none"}
-                style={{
-                  backgroundColor: "#ffa76e",
-                  borderRadius: "5px",
-                  padding: "0px 4px",
-                }}
               >
                 Add Pigeon Result
               </p>
@@ -172,7 +184,17 @@ const AdminAddPigeonOwnerResult = () => {
               name="totalPigeons"
               type="number"
               value={resultsForm.totalPigeons}
-              onChange={handleFormChange}
+              onChange={(e) =>
+                setResultsForm((prev) => {
+                  const total = calculateTotalTime(startTime, returnTimes);
+
+                  return {
+                    ...prev,
+                    totalPigeons: e.target.totalPigeons,
+                    total: total,
+                  };
+                })
+              }
             />
           </Form.Group>
           <div className="d-flex gap-2">
@@ -181,14 +203,14 @@ const AdminAddPigeonOwnerResult = () => {
               name="firstPigeonReturnTime"
               placeholder="#1 Pigeon"
               className="px-5"
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setResultsForm((prev) => {
                   return {
                     ...prev,
                     firstPigeonReturnTime: timeString,
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -198,14 +220,14 @@ const AdminAddPigeonOwnerResult = () => {
               name="secondPigeonReturnTime"
               placeholder="#2 Pigeon"
               className="px-5"
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setResultsForm((prev) => {
                   return {
                     ...prev,
                     secondPigeonReturnTime: timeString,
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -215,14 +237,14 @@ const AdminAddPigeonOwnerResult = () => {
               name="thirdPigeonReturnTime"
               placeholder="#3 Pigeon"
               className="px-5"
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setResultsForm((prev) => {
                   return {
                     ...prev,
                     thirdPigeonReturnTime: timeString,
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -232,14 +254,14 @@ const AdminAddPigeonOwnerResult = () => {
               name="fourthPigeonReturnTime"
               placeholder="#4 Pigeon"
               className="px-5"
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setResultsForm((prev) => {
                   return {
                     ...prev,
                     fourthPigeonReturnTime: timeString,
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -249,14 +271,14 @@ const AdminAddPigeonOwnerResult = () => {
               name="fifthPigeonReturnTime"
               placeholder="#5 Pigeon"
               className="px-5"
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setResultsForm((prev) => {
                   return {
                     ...prev,
                     fifthPigeonReturnTime: timeString,
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -266,14 +288,14 @@ const AdminAddPigeonOwnerResult = () => {
               name="sixthPigeonReturnTime"
               placeholder="#6 Pigeon"
               className="px-5"
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setResultsForm((prev) => {
                   return {
                     ...prev,
                     sixthPigeonReturnTime: timeString,
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -283,32 +305,27 @@ const AdminAddPigeonOwnerResult = () => {
               name="seventhPigeonReturnTime"
               placeholder="#7 Pigeon"
               className="px-5"
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setResultsForm((prev) => {
                   return {
                     ...prev,
                     seventhPigeonReturnTime: timeString,
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
           <div className="d-flex gap-2 ">
             <label>Total Time</label>
-            <TimePicker
+            <Input
+              type="text"
               name="total"
-              placeholder="Total Time"
-              className="px-5"
-              onChange={(time, timeString) =>
-                setResultsForm((prev) => {
-                  return {
-                    ...prev,
-                    total: timeString,
-                  };
-                })
-              }
-              defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
+              size="small"
+              // placeholder="Total Time"
+              value={resultsForm.total}
+              className="px-3"
+              readOnly
             />
           </div>
           <Button

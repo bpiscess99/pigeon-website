@@ -18,9 +18,7 @@ const PigeonOwnerContainer = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const slug = JSON.parse(localStorage.getItem("user")).slug;
-  const state = useLocation().state;
-
-  console.log(state, "--------");
+  const [activeTournamentId, setActiveTournamentId] = useState("");
 
   const handleEditClick = (owner) => {
     setEditingOwner(owner); // Open the modal with owner data
@@ -94,6 +92,7 @@ const PigeonOwnerContainer = () => {
       );
       if (response.data.success) {
         setOwners(response.data.pigeonOwners);
+        setActiveTournamentId(id);
       }
     } catch (error) {
       console.error("Error fetching clubs:", error);
@@ -151,15 +150,19 @@ const PigeonOwnerContainer = () => {
           },
         ]}
       />
-      <div className="d-flex px-2 gap-2">
+
+      <div className="d-flex px-2 justify-content-center gap-2">
         {tournaments &&
           tournaments.map((_, index) => {
             return (
               <Button
                 size="sm"
-                variant={"outline-info"}
+                variant={activeTournamentId === _._id ? "dark" : "outline-dark"}
                 key={index}
-                onClick={(e) => fetchTournamentPigeons(_._id)}
+                onClick={() => {
+                  fetchTournamentPigeons(_._id);
+                  setActiveTournamentId(_._id);
+                }}
               >
                 {_.tournamentName}
               </Button>
@@ -202,32 +205,31 @@ const PigeonOwnerContainer = () => {
                       {owner.pigeonsResults !== undefined ? (
                         <Button
                           size="sm"
-                          variant="outline-info"
+                          variant="outline-dark"
                           onClick={() => {
                             navigate(`/club/${slug}/pigeonOwnerResultUpdate`, {
                               state: { owner },
                             });
                           }}
                         >
-                          <Image src="/update.png" />
                           Update
                         </Button>
                       ) : (
                         <Button
                           size="sm"
-                          variant="outline-primary"
+                          variant="outline-dark"
                           onClick={() => {
                             navigate(`/club/${slug}/pigeonResultForm`, {
                               state: { owner },
                             });
                           }}
                         >
-                          <Image src="/add.png" />
+                          Add
                         </Button>
                       )}
                       <Button
                         size="sm"
-                        variant="outline-info"
+                        variant="outline-dark"
                         onClick={() => {
                           navigate(`/club/${slug}/pigeonOwnerResults`, {
                             state: { owner },
@@ -243,7 +245,7 @@ const PigeonOwnerContainer = () => {
                     <div className="d-flex gap-1">
                       <Button
                         size="sm"
-                        variant="outline-primary"
+                        variant="outline-dark"
                         onClick={() => handleEditClick(owner)}
                       >
                         <EditOutlined />
@@ -310,20 +312,21 @@ const PigeonOwnerContainer = () => {
                 />
               </div>
               <div className="modal-footer">
-                <button
+                <Button
                   type="button"
-                  className="btn btn-secondary"
+                  variant="outline-dark"
+                  // className="btn btn-secondary"
                   onClick={() => setEditingOwner(null)}
                 >
                   Close
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
-                  className="btn btn-primary"
+                  variant="success"
                   onClick={() => handleSave(editingOwner._id, editingOwner)}
                 >
                   Save changes
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -351,20 +354,20 @@ const PigeonOwnerContainer = () => {
                 </p>
               </div>
               <div className="modal-footer">
-                <button
+                <Button
                   type="button"
-                  className="btn btn-secondary"
+                  variant="outline-dark"
                   onClick={() => setDeletingOwner(null)}
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
-                  className="btn btn-danger"
+                  variant="danger"
                   onClick={handleConfirmDelete}
                 >
                   Delete
-                </button>
+                </Button>
               </div>
             </div>
           </div>

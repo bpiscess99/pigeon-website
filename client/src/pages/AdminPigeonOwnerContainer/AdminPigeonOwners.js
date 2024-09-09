@@ -63,6 +63,7 @@ const AdminPigeonOwners = () => {
       toast.error("Something went wrong");
     }
   };
+  const [activeTournamentId, setActiveTournamentId] = useState("");
 
   const fetchTournamentPigeons = async (id) => {
     try {
@@ -71,6 +72,7 @@ const AdminPigeonOwners = () => {
       );
       if (response.data.success) {
         setOwners(response.data.pigeonOwners);
+        setActiveTournamentId(id);
       }
     } catch (error) {
       console.error("Error fetching clubs:", error);
@@ -83,24 +85,23 @@ const AdminPigeonOwners = () => {
 
   return (
     <div>
-      <div className="d-flex px-4 gap-2">
-        <label> Select Tournament </label>
-        <Select
-          type="text"
-          name="tournament"
-          placeholder="Select Tournament"
-          onChange={(id) => fetchTournamentPigeons(id)}
-        >
-          <Select.Option></Select.Option>
-          {tournaments &&
-            tournaments.map((_, index) => {
-              return (
-                <Select.Option key={index} value={_._id}>
-                  {_.tournamentName}
-                </Select.Option>
-              );
-            })}
-        </Select>
+      <div className="d-flex px-2 justify-content-center gap-2">
+        {tournaments &&
+          tournaments.map((_, index) => {
+            return (
+              <Button
+                size="sm"
+                variant={activeTournamentId === _._id ? "dark" : "outline-dark"}
+                key={index}
+                onClick={() => {
+                  fetchTournamentPigeons(_._id);
+                  setActiveTournamentId(_._id);
+                }}
+              >
+                {_.tournamentName}
+              </Button>
+            );
+          })}
       </div>
       <div className="px-4 py-2">
         <Table responsive striped border={"1px solid grey"} hover size="sm">
@@ -143,32 +144,31 @@ const AdminPigeonOwners = () => {
                     {owner.pigeonsResults !== undefined ? (
                       <Button
                         size="sm"
-                        variant="outline-info"
+                        variant="outline-dark"
                         onClick={() => {
                           navigate(`/pigeonOwners/updatePigeonOwnerResult`, {
                             state: { owner },
                           });
                         }}
                       >
-                        <Image src="/update.png" />
                         Update
                       </Button>
                     ) : (
                       <Button
                         size="sm"
-                        variant="outline-primary"
+                        variant="outline-dark"
                         onClick={() => {
                           navigate(`/pigeonOwners/addPigeonOwnerResult`, {
                             state: { owner },
                           });
                         }}
                       >
-                        <Image src="/add.png" />
+                        Add
                       </Button>
                     )}
                     <Button
                       size="sm"
-                      variant="outline-info"
+                      variant="outline-dark"
                       onClick={() => {
                         navigate(`/pigeonOwners/pigeonOwnerResult`, {
                           state: { owner },
@@ -184,7 +184,7 @@ const AdminPigeonOwners = () => {
                   <div className="d-flex gap-1">
                     <Button
                       size="sm"
-                      variant="outline-primary"
+                      variant="outline-dark"
                       onClick={() => handleEditClick(owner)}
                     >
                       <EditOutlined />
@@ -210,13 +210,14 @@ const AdminPigeonOwners = () => {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Edit Owner</h5>
-                <button
+                <Button
                   type="button"
-                  className="close"
+                  variant="outline-dark"
+                  size="sm"
                   onClick={() => setEditingOwner(null)}
                 >
                   <span>&times;</span>
-                </button>
+                </Button>
               </div>
               <div className="modal-body">
                 <input
@@ -251,20 +252,22 @@ const AdminPigeonOwners = () => {
                 />
               </div>
               <div className="modal-footer">
-                <button
+                <Button
                   type="button"
-                  className="btn btn-secondary"
+                  variant="outline-dark"
+                  size="sm"
                   onClick={() => setEditingOwner(null)}
                 >
                   Close
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
-                  className="btn btn-primary"
+                  variant="success"
+                  size="sm"
                   onClick={() => handleSave(editingOwner._id, editingOwner)}
                 >
                   Save changes
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -292,20 +295,22 @@ const AdminPigeonOwners = () => {
                 </p>
               </div>
               <div className="modal-footer">
-                <button
+                <Button
                   type="button"
-                  className="btn btn-secondary"
+                  variant="outline-dark"
+                  size="sm"
                   onClick={() => setDeletingOwner(null)}
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
-                  className="btn btn-danger"
+                  variant="outline-danger"
+                  size="sm"
                   onClick={handleConfirmDelete}
                 >
                   Delete
-                </button>
+                </Button>
               </div>
             </div>
           </div>

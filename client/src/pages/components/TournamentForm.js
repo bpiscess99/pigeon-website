@@ -389,7 +389,7 @@ const TournamentForm = () => {
           )}
         </React.Fragment>
 
-        <Button variant="outline-primary" size="sm" type="submit">
+        <Button variant="outline-dark" className="px-5" type="submit">
           Submit
         </Button>
         <Toaster />

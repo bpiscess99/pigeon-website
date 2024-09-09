@@ -19,26 +19,58 @@ const ClubDashboardContainer = () => {
               <Nav.Link></Nav.Link>
               <NavDropdown title="Tournaments">
                 <NavDropdown.Item>
-                  <NavLink to={`/club/${slug}/tournaments`}>
+                  <NavLink
+                    to={`/club/:${slug}/tournaments`}
+                    style={({ isActive, isTransitioning }) => {
+                      return {
+                        color: isActive ? "blue" : "black",
+                      };
+                    }}
+                    className={"text-decoration-none"}
+                  >
                     tournaments
                   </NavLink>
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item>
-                  <NavLink to={`/club/${slug}/createTournaments`}>
+                  <NavLink
+                    to={`/club/:${slug}/createTournaments`}
+                    style={({ isActive, isTransitioning }) => {
+                      return {
+                        color: isActive ? "blue" : "black",
+                      };
+                    }}
+                    className={"text-decoration-none"}
+                  >
                     Create tournament
                   </NavLink>
                 </NavDropdown.Item>
               </NavDropdown>
               <NavDropdown title="Participants">
                 <NavDropdown.Item>
-                  <NavLink to={`/club/${slug}/pigeonOwners`}>
+                  <NavLink
+                    to={`/club/:${slug}/pigeonOwners`}
+                    style={({ isActive, isTransitioning }) => {
+                      return {
+                        color: isActive ? "blue" : "black",
+                      };
+                    }}
+                    className={"text-decoration-none"}
+                  >
                     Participants
                   </NavLink>
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item>
-                  <NavLink to={`/club/${slug}/pigeonOwnerForm`}>
+                  <NavLink
+                    to={`/club/:${slug}/pigeonOwnerForm`}
+                    style={({ isActive, isTransitioning }) => {
+                      return {
+                        color: isActive ? "blue" : "black",
+                      };
+                    }}
+                    className={"text-decoration-none"}
+                  >
                     Create Particiapant
                   </NavLink>
                 </NavDropdown.Item>

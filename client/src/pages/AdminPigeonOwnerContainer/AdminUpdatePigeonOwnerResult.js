@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { Breadcrumb, Tag, TimePicker } from "antd";
+import { Breadcrumb, Input, Tag, TimePicker } from "antd";
 import axios from "axios";
 
 import { useState } from "react";
@@ -14,11 +14,12 @@ dayjs.extend(customParseFormat);
 const AdminUpdatePigeonOwnerResult = () => {
   const { owner } = useLocation().state;
   const [updateOwner, setUpdateOwner] = useState(owner);
+  const slug = JSON.parse(localStorage.getItem("user")).slug;
   const navigate = useNavigate();
+  const [startTime, setStartTime] = useState("");
+
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
-
     setUpdateOwner((prevState) => {
       return {
         ...prevState,
@@ -29,6 +30,106 @@ const AdminUpdatePigeonOwnerResult = () => {
       };
     });
   };
+
+  const fetchStartTime = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1//pigeonOwners/getPigeonOwnerTournament/:${id}`
+      );
+      setStartTime(response.data.startTime);
+    } catch (error) {
+      console.error("Error fetching clubs:", error);
+    }
+  };
+
+  function calculateTimeDifference(startTime, returnTime) {
+    if (!returnTime) return { hours: 0, minutes: 0, seconds: 0 }; // Skip if return time is not provided
+
+    // Split the startTime and returnTime into [hours, minutes, seconds]
+    const [startHrs, startMins, startSecs] = startTime.split(":").map(Number);
+    const [endHrs, endMins, endSecs] = returnTime.split(":").map(Number);
+
+    // Convert the start and end times into total seconds
+    const startTotalSecs = startHrs * 3600 + startMins * 60 + startSecs;
+    const endTotalSecs = endHrs * 3600 + endMins * 60 + endSecs;
+
+    // Calculate the difference in seconds
+    let diffSecs = endTotalSecs - startTotalSecs;
+
+    // Convert the difference back into hours, minutes, and seconds
+    const diffHrs = Math.floor(diffSecs / 3600); // Hours
+    diffSecs %= 3600;
+    const diffMins = Math.floor(diffSecs / 60); // Minutes
+    const diffRemainingSecs = diffSecs % 60; // Seconds
+
+    return { hours: diffHrs, minutes: diffMins, seconds: diffRemainingSecs };
+  }
+
+  function calculateTotalTime(startTime, returnTimes) {
+    let totalHours = 0;
+    let totalMinutes = 0;
+    let totalSeconds = 0;
+
+    returnTimes.forEach((returnTime) => {
+      const { hours, minutes, seconds } = calculateTimeDifference(
+        startTime,
+        returnTime
+      );
+      totalHours += hours;
+      totalMinutes += minutes;
+      totalSeconds += seconds;
+    });
+
+    // Adjust total seconds to minutes if more than 60 seconds
+    totalMinutes += Math.floor(totalSeconds / 60);
+    totalSeconds = totalSeconds % 60;
+
+    // Adjust total minutes to hours if more than 60 minutes
+    totalHours += Math.floor(totalMinutes / 60);
+    totalMinutes = totalMinutes % 60;
+
+    return `${totalHours}:${totalMinutes}:${totalSeconds}`;
+  }
+
+  useEffect(() => {
+    fetchStartTime(owner._id);
+  }, []);
+
+  useEffect(() => {
+    // Only calculate total time when startTime or return times change
+    if (!startTime) return;
+
+    const returnTimes = [
+      updateOwner.pigeonsResults.firstPigeonReturnTime,
+      updateOwner.pigeonsResults.secondPigeonReturnTime,
+      updateOwner.pigeonsResults.thirdPigeonReturnTime,
+      updateOwner.pigeonsResults.fourthPigeonReturnTime,
+      updateOwner.pigeonsResults.fifthPigeonReturnTime,
+      updateOwner.pigeonsResults.sixthPigeonReturnTime,
+      updateOwner.pigeonsResults.seventhPigeonReturnTime,
+    ];
+
+    const newTotal = calculateTotalTime(startTime, returnTimes);
+
+    // Only update state if total time actually changes
+    if (updateOwner.pigeonsResults.total !== newTotal) {
+      setUpdateOwner((prevState) => ({
+        ...prevState,
+        pigeonsResults: {
+          ...prevState.pigeonsResults,
+          total: newTotal,
+        },
+      }));
+    }
+  }, [
+    updateOwner.pigeonsResults.firstPigeonReturnTime,
+    updateOwner.pigeonsResults.secondPigeonReturnTime,
+    updateOwner.pigeonsResults.thirdPigeonReturnTime,
+    updateOwner.pigeonsResults.fourthPigeonReturnTime,
+    updateOwner.pigeonsResults.fifthPigeonReturnTime,
+    updateOwner.pigeonsResults.sixthPigeonReturnTime,
+    updateOwner.pigeonsResults.seventhPigeonReturnTime,
+  ]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -103,11 +204,7 @@ const AdminUpdatePigeonOwnerResult = () => {
           {
             title: (
               <p
-                style={{
-                  backgroundColor: "#ffa76e",
-                  borderRadius: "5px",
-                  padding: "0px 4px",
-                }}
+                style={{ color: "#ffa76e", fontWeight: "bolder" }}
                 className={"text-decoration-none"}
               >
                 Pigeon Owner Update
@@ -151,7 +248,7 @@ const AdminUpdatePigeonOwnerResult = () => {
                     )
                   : null
               }
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setUpdateOwner((prev) => {
                   return {
                     ...prev,
@@ -160,8 +257,8 @@ const AdminUpdatePigeonOwnerResult = () => {
                       firstPigeonReturnTime: timeString,
                     },
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -180,7 +277,7 @@ const AdminUpdatePigeonOwnerResult = () => {
                     )
                   : null
               }
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setUpdateOwner((prev) => {
                   return {
                     ...prev,
@@ -189,8 +286,8 @@ const AdminUpdatePigeonOwnerResult = () => {
                       secondPigeonReturnTime: timeString,
                     },
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -209,7 +306,7 @@ const AdminUpdatePigeonOwnerResult = () => {
                     )
                   : null
               }
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setUpdateOwner((prev) => {
                   return {
                     ...prev,
@@ -218,8 +315,8 @@ const AdminUpdatePigeonOwnerResult = () => {
                       thirdPigeonReturnTime: timeString,
                     },
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -239,7 +336,7 @@ const AdminUpdatePigeonOwnerResult = () => {
                     )
                   : null
               }
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setUpdateOwner((prev) => {
                   return {
                     ...prev,
@@ -248,8 +345,8 @@ const AdminUpdatePigeonOwnerResult = () => {
                       fourthPigeonReturnTime: timeString,
                     },
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -268,7 +365,7 @@ const AdminUpdatePigeonOwnerResult = () => {
                     )
                   : null
               }
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setUpdateOwner((prev) => {
                   return {
                     ...prev,
@@ -277,8 +374,8 @@ const AdminUpdatePigeonOwnerResult = () => {
                       fifthPigeonReturnTime: timeString,
                     },
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -297,7 +394,7 @@ const AdminUpdatePigeonOwnerResult = () => {
                     )
                   : null
               }
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setUpdateOwner((prev) => {
                   return {
                     ...prev,
@@ -306,8 +403,8 @@ const AdminUpdatePigeonOwnerResult = () => {
                       sixthPigeonReturnTime: timeString,
                     },
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
@@ -326,7 +423,7 @@ const AdminUpdatePigeonOwnerResult = () => {
                     )
                   : null
               }
-              onChange={(time, timeString) =>
+              onChange={(time, timeString) => {
                 setUpdateOwner((prev) => {
                   return {
                     ...prev,
@@ -335,34 +432,21 @@ const AdminUpdatePigeonOwnerResult = () => {
                       seventhPigeonReturnTime: timeString,
                     },
                   };
-                })
-              }
+                });
+              }}
               defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
             />
           </div>
           <div className="d-flex gap-2 ">
             <label>Total Time</label>
-            <TimePicker
+            <Input
+              type="text"
               name="total"
-              placeholder="Total Time"
-              className="px-5"
-              value={
-                updateOwner.pigeonsResults.total
-                  ? dayjs(updateOwner.pigeonsResults.total, "HH:mm:ss")
-                  : null
-              }
-              onChange={(time, timeString) =>
-                setUpdateOwner((prev) => {
-                  return {
-                    ...prev,
-                    pigeonsResults: {
-                      ...prev.pigeonsResults,
-                      total: timeString,
-                    },
-                  };
-                })
-              }
-              defaultOpenValue={dayjs("00:00:00", "HH:mm:ss")}
+              size="small"
+              // placeholder="Total Time"
+              value={updateOwner.pigeonsResults.total}
+              className="px-3"
+              readOnly
             />
           </div>
           <Button

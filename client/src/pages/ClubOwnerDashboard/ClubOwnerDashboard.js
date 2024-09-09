@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Image } from "react-bootstrap";
 import "../../index.css";
 import axios from "axios";
+import { NavLink } from "react-router-dom";
 
 const ClubOwnerDashboard = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -32,11 +33,10 @@ const ClubOwnerDashboard = () => {
           <Card.Body>
             <Image src="/clubs.png" alt="club_img" />
             <Card.Title className="color-orange text-capitalize">
-              {user.name}
+              {user.name} Dashboard
             </Card.Title>
-            <Card.Text>
-              <Tag color="orange">{user.email}</Tag>
-            </Card.Text>
+            <Card.Text>{user.email}</Card.Text>
+            <hr />
           </Card.Body>
         </Card>
       </div>
@@ -45,7 +45,35 @@ const ClubOwnerDashboard = () => {
           return (
             <Card style={{ width: "18rem", height: "10rem" }}>
               <Card.Header className="d-flex justify-content-between align-items-center">
-                <Card.Subtitle style={{ color: "#ffa76e" }}>{_}</Card.Subtitle>
+                <Card.Subtitle style={{ color: "black" }}>
+                  {index === 0 ? (
+                    <NavLink
+                      style={({ isActive }) => {
+                        return {
+                          color: isActive ? "blue" : "black",
+                        };
+                      }}
+                      className={"text-decoration-none"}
+                      to={`/club/:${user.slug}/tournaments`}
+                    >
+                      {" "}
+                      {_}
+                    </NavLink>
+                  ) : (
+                    <NavLink
+                      style={({ isActive }) => {
+                        return {
+                          color: isActive ? "blue" : "black",
+                        };
+                      }}
+                      className={"text-decoration-none"}
+                      to={`/club/:${user.slug}/pigeonOwners`}
+                    >
+                      {" "}
+                      {_}
+                    </NavLink>
+                  )}
+                </Card.Subtitle>
                 {index === 0 ? (
                   <Image src="/tournament.png" alt="club_img" width={"30px"} />
                 ) : (
@@ -58,7 +86,7 @@ const ClubOwnerDashboard = () => {
                 </Card.Subtitle>
                 <Progress
                   type="circle"
-                  percent={(tournaments.length * 990) / 100}
+                  percent={tournaments.length * 990}
                   size={"small"}
                 />
               </Card.Body>

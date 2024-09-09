@@ -19,7 +19,7 @@ const AdminDashboard = () => {
           <Card.Body>
             <Image src="/clubs.png" alt="club_img" />
             <Card.Title className="color-orange text-capitalize">
-              {user.name} Dashb oard
+              {user.name} Dashboard
             </Card.Title>
             <Card.Text>{user.email}</Card.Text>
             <hr />
