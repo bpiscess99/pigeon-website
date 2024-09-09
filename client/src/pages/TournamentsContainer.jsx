@@ -69,7 +69,10 @@ const TournamentsContainer = () => {
         title: "Participating Loft",
         dataIndex: "participatingLoft",
         render: (_) => {
-          return <Button size='sm' variant='success'>Participants</Button>  
+          return <Button size='sm'
+          onClick={()=>navigate(`/pigeonOwners/pigeonOwnerForm`)} 
+          
+          variant='success'>Participants</Button>  
         },
       },
   
