@@ -25,9 +25,9 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(user));
 
         if (user.role === 1) {
-          navigate("/clubs"); // Navigate to /create page if role is 1
+          navigate("/dashboard"); // Navigate to /create page if role is 1
         } else if (user.role === 0 && user.slug) {
-          navigate(`/club/${user.slug}/dashboard`);
+          navigate(`/club/:${user.slug}/`);
         } else {
           alert("User slug is missing.");
         }

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { Breadcrumb, Input, Tag, TimePicker } from "antd";
+import { Breadcrumb, Input, TimePicker } from "antd";
 import axios from "axios";
 
 import { useState } from "react";
@@ -34,7 +34,7 @@ const PigeonOwnerResultUpdate = () => {
   const fetchStartTime = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/v1//pigeonOwners/getPigeonOwnerTournament/:${id}`
+        `http://localhost:8080/api/v1/pigeonOwners/getPigeonOwnerTournament/:${id}`
       );
       setStartTime(response.data.startTime);
     } catch (error) {
