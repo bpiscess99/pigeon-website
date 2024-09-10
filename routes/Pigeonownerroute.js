@@ -15,7 +15,7 @@ import { requiresingnin } from "../middlewares/Authmiddleware.js";
 
 const router = express.Router();
 
-router.post("/owner", uploadImage, createOwner);
+router.post("/owner", requiresingnin, uploadImage, createOwner);
 
 router.get("/owners", getOwner);
 

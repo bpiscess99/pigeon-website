@@ -18,12 +18,19 @@ const AdminPigeonOwners = () => {
   const handleEditClick = (owner) => {
     setEditingOwner(owner); // Open the modal with owner data
   };
+  const token = localStorage.getItem("token");
 
   const handleSave = async (id, updatedData) => {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/v1/owners/${id}`,
-        updatedData
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
       if (response.data.success) {
         toast.success(response.data.message);
@@ -49,8 +56,16 @@ const AdminPigeonOwners = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await axios.delete(`
-        http://localhost:8080/api/v1/owners/${deletingOwner._id}`);
+      const response = await axios.delete(
+        `
+        http://localhost:8080/api/v1/owners/${deletingOwner._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
       if (response.data.success) {
         toast.success(response.data.message);
         setOwners(owners.filter((owner) => owner._id !== deletingOwner._id)); // Remove the deleted owner from the list

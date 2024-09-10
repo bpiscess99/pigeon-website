@@ -27,23 +27,22 @@ const AdminAddPigeonOwnerResult = () => {
     total: "",
   });
   const [startTime, setStartTime] = useState("");
+  const slug = JSON.parse(localStorage.getItem("user")).slug;
   const navigate = useNavigate();
-  const returnTimes = [
-    resultsForm.firstPigeonReturnTime,
-    resultsForm.secondPigeonReturnTime,
-    resultsForm.thirdPigeonReturnTime,
-    resultsForm.fourthPigeonReturnTime,
-    resultsForm.fifthPigeonReturnTime,
-    resultsForm.sixthPigeonReturnTime,
-    resultsForm.seventhPigeonReturnTime,
-  ];
 
+  const token = localStorage.getItem("token");
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.patch(
         "http://localhost:8080/api/v1/createResults/",
-        resultsForm
+        resultsForm,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
       console.log(response);
       if (response.status === 200) {
@@ -123,12 +122,28 @@ const AdminAddPigeonOwnerResult = () => {
   }, []);
 
   useEffect(() => {
-    const total = calculateTotalTime(startTime, returnTimes);
+    const total = calculateTotalTime(startTime, [
+      resultsForm.firstPigeonReturnTime,
+      resultsForm.secondPigeonReturnTime,
+      resultsForm.thirdPigeonReturnTime,
+      resultsForm.fourthPigeonReturnTime,
+      resultsForm.fifthPigeonReturnTime,
+      resultsForm.sixthPigeonReturnTime,
+      resultsForm.seventhPigeonReturnTime,
+    ]);
     setResultsForm((prev) => ({
       ...prev,
       total,
     }));
-  }, [startTime, returnTimes]); // Effect depends on startTime and returnTimes
+  }, [
+    resultsForm.firstPigeonReturnTime,
+    resultsForm.secondPigeonReturnTime,
+    resultsForm.thirdPigeonReturnTime,
+    resultsForm.fourthPigeonReturnTime,
+    resultsForm.fifthPigeonReturnTime,
+    resultsForm.sixthPigeonReturnTime,
+    resultsForm.seventhPigeonReturnTime,
+  ]); // Effect depends on startTime and returnTimes
 
   return (
     <>
@@ -183,17 +198,15 @@ const AdminAddPigeonOwnerResult = () => {
               name="totalPigeons"
               type="number"
               value={resultsForm.totalPigeons}
-              onChange={(e) =>
+              onChange={(e) => {
+                // const total = calculateTotalTime(startTime, returnTimes);
                 setResultsForm((prev) => {
-                  const total = calculateTotalTime(startTime, returnTimes);
-
                   return {
                     ...prev,
                     totalPigeons: e.target.totalPigeons,
-                    total: total,
                   };
-                })
-              }
+                });
+              }}
             />
           </Form.Group>
           <div className="d-flex gap-2">

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { Breadcrumb, Input, Tag, TimePicker } from "antd";
+import { Breadcrumb, Input, TimePicker } from "antd";
 import axios from "axios";
 
 import { useState } from "react";
@@ -34,7 +34,7 @@ const AdminUpdatePigeonOwnerResult = () => {
   const fetchStartTime = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/v1//pigeonOwners/getPigeonOwnerTournament/:${id}`
+        `http://localhost:8080/api/v1/pigeonOwners/getPigeonOwnerTournament/:${id}`
       );
       setStartTime(response.data.startTime);
     } catch (error) {
@@ -130,7 +130,7 @@ const AdminUpdatePigeonOwnerResult = () => {
     updateOwner.pigeonsResults.sixthPigeonReturnTime,
     updateOwner.pigeonsResults.seventhPigeonReturnTime,
   ]);
-
+  const token = localStorage.getItem("token");
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const {
@@ -159,7 +159,13 @@ const AdminUpdatePigeonOwnerResult = () => {
     try {
       const response = await axios.patch(
         "http://localhost:8080/api/v1/createResults/",
-        update
+        update,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
       console.log(response);
       if (response.status === 200) {
@@ -195,7 +201,7 @@ const AdminUpdatePigeonOwnerResult = () => {
                   };
                 }}
                 className={"text-decoration-none"}
-                to={`/pigeonOwners`}
+                to={`/club/:${slug}/pigeonOwners`}
               >
                 Pigeon Owners
               </NavLink>
@@ -451,7 +457,7 @@ const AdminUpdatePigeonOwnerResult = () => {
           </div>
           <Button
             className="px-5 mt-3"
-            variant="outline-primary"
+            variant="outline-dark"
             type="submit"
             size="sm"
           >

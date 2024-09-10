@@ -457,7 +457,7 @@ const PigeonOwnerResultUpdate = () => {
           </div>
           <Button
             className="px-5 mt-3"
-            variant="outline-primary"
+            variant="outline-dark"
             type="submit"
             size="sm"
           >

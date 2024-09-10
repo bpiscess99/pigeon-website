@@ -15,14 +15,7 @@ const AdminPigeonForm = () => {
   const [image, setImage] = useState(null);
   const { tournaments } = useContext(TournamentContext);
   const token = localStorage.getItem("token");
-  console.log(token);
 
-  const configForm = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
-    },
-  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -36,9 +29,17 @@ const AdminPigeonForm = () => {
 
     formData.append("tournament", event.target.tournament.value);
     try {
+      console.log(formData);
+
       const response = await axios.post(
         "http://localhost:8080/api/v1/owner",
-        configForm
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
       console.log(response);
 
