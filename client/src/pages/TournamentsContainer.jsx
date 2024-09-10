@@ -113,7 +113,7 @@ const TournamentsContainer = () => {
               navigate(`/tournaments/:${_._id}`,{state:{tournament:_}})
             }}
           >
-            <Button variant="primary" size='sm'>Update</Button>
+            <Button variant="dark" size='sm'>Update</Button>
             <Toaster />
           </Popconfirm>
         </div>

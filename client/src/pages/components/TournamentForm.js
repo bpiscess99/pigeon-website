@@ -214,12 +214,16 @@ const TournamentForm = () => {
         </Form.Group>
         <Form.Group className="w-100 ml-3">
           <Form.Label className="label-size" htmlFor="disabledTextInput">
+            <span className="star">
+              <sup>*</sup>{" "}
+            </span>{" "}
             Start Time
           </Form.Label>
 
           <TimePicker
             size="sm"
             type="time"
+            required
             placeholder="Start Time"
             name="startTime"
             className="px-5 mx-3"
@@ -357,9 +361,13 @@ const TournamentForm = () => {
           />
         </Form.Group>
         <Form.Group className="w-100">
+          <span className="star">
+            <sup>*</sup>{" "}
+          </span>
           <Form.Label className="label-size"> Number Of Prizes </Form.Label>
           <Form.Control
             size="sm"
+            required
             placeholder="Enter Number Of Prizes"
             name="numberOfPrizes"
             type="text"

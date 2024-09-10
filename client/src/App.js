@@ -30,6 +30,7 @@ import AdminPigeonOwners from "./pages/AdminPigeonOwnerContainer/AdminPigeonOwne
 import AdminViewPigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminViewPigeonOwnerResult";
 import AdminAddPigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminAddPigeonOwnerResult";
 import AdminUpdatePigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminUpdatePigeonOwnerResult";
+import TournamentFormUpdate from "./pages/ClubOwnerDashboard/TournamentFormUpdate";
 
 function App() {
   return (
@@ -87,6 +88,8 @@ function App() {
         <Route path="club/:id/" element={<ClubDashboardContainer />}>
           <Route path="tournaments" index element={<ClubTournaments />} />
           <Route path="createTournaments" element={<TournamentForm />} />
+          <Route path="tournaments/:id" element={<TournamentFormUpdate />} />
+
           {/*pigeon owners  */}
           <Route path="pigeonOwners" element={<PigeonOwnerContainer />} />
           <Route path="pigeonOwnerForm" element={<PigeonOwnerForm />} />

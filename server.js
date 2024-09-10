@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 import path from "path";
+import session from "express-session";
 import { fileURLToPath } from "url";
 import connectDB from "./config/db.js";
 import Clubsroute from "./routes/Clubsroute.js";
@@ -16,9 +17,19 @@ import cors from "cors";
 const app = express();
 // const httpServer = createServer(app);
 // const io = new Server(httpServer);
-
 dotenv.config();
 app.use(cors({ origin: "http://localhost:3001" }));
+app.use(
+  session({
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET,
+    cookie: {
+      secure: true,
+      httpOnly: true,
+      maxAge: 3600000, // Sets the cookie expiration time in milliseconds (1 hour here)
+    },
+  })
+);
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(morgan("dev"));

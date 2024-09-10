@@ -1,7 +1,8 @@
-import { Breadcrumb, Table, Tag } from "antd";
+import { Breadcrumb, message, Popconfirm, Table, Tag } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
+import { Toaster } from "react-hot-toast";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const ClubTournaments = () => {
@@ -136,6 +137,32 @@ const ClubTournaments = () => {
           >
             Participants
           </Button>
+        );
+      },
+    },
+    {
+      title: "Actions",
+      render: (_) => {
+        return (
+          <div className="d-flex gap-2 flex-column py-2 align-items-start">
+            <Popconfirm
+              title="Update the task"
+              description="Are you sure to update this task?"
+              okText="Yes"
+              cancelText="No"
+              onCancel={() => message.info("Cancle update")}
+              onConfirm={(e) => {
+                navigate(`/club/:${user.slug}/tournaments/:${_._id}`, {
+                  state: { tournament: _ },
+                });
+              }}
+            >
+              <Button variant="dark" size="sm">
+                Update
+              </Button>
+              <Toaster />
+            </Popconfirm>
+          </div>
         );
       },
     },

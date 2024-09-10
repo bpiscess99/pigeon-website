@@ -121,7 +121,8 @@ const Dashboard = () => {
                     fontWeight: "600",
                     color: "#E85C0D",
                   }}
-                  to={`/club/${club.slug}/tournaments`}
+                  to={`/cl`}
+                  state={{ id: club._id }}
                 >
                   {club.cname}
                 </Link>

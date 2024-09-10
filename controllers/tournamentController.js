@@ -185,7 +185,7 @@ export const updateTournament = async (req, res) => {
   }
 };
 
-export const getTournamentsOfClubs = async (req, res) => {
+export const getTournamentsOfClub = async (req, res) => {
   try {
     const { club_id } = req.params;
 
@@ -211,7 +211,7 @@ export const getAllTournamentsWithPigeonOwners = async (req, res) => {
       .populate("pigeonOwners")
       .sort({ _id: -1 });
     return res.status(200).json({
-      success: false,
+      success: true,
       message: "Tournaments",
       tournaments,
     });
@@ -220,6 +220,28 @@ export const getAllTournamentsWithPigeonOwners = async (req, res) => {
       message: "Error",
       error: error.message,
     });
+  }
+};
+
+export const getTournamentsOfClubWithPigeonOwners = async (req, res) => {
+  try {
+    const { club_id } = req.params;
+    console.log(club_id);
+    const clubTournamentsPigeonOwners = await Tournament.find({
+      club_owner: club_id.slice(1),
+    })
+      .populate("pigeonOwners")
+      .sort({ _id: -1 });
+    res.status(200).json({
+      success: true,
+      msg: "Tournaments",
+      clubTournamentsPigeonOwners,
+    });
+  } catch (error) {
+    console.error("Error: ", error.message);
+    res
+      .status(500)
+      .json({ success: false, error: "Error", message: error.message });
   }
 };
 

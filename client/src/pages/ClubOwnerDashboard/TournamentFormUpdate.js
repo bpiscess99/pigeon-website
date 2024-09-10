@@ -1,39 +1,16 @@
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { message, Popconfirm } from "antd";
 
-const TournamentDetails = () => {
+const TournamentFormUpdate = () => {
   const navigate = useNavigate();
   const { tournament } = useLocation().state;
   const [tournamentDetails, setTournamentDetails] = useState(tournament);
   const { id } = useParams();
-
-  const [owners, setOwners] = useState([]);
-  const fetchOwners = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/v1/allowners"
-      ); // Adjust the URL to your backend endpoint
-      const options = response.data.map((_, index) => {
-        return {
-          label: _.name,
-          value: _.name,
-        };
-      });
-      setOwners(options);
-    } catch (error) {
-      console.error("Error fetching owners:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchOwners();
-  }, []);
-
+  const user = JSON.parse(localStorage.getItem("user"));
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setTournamentDetails((prevTournament) => {
@@ -42,25 +19,6 @@ const TournamentDetails = () => {
         [name]: value,
       };
     });
-  };
-
-  const handleDeleteTournament = async () => {
-    console.log("delete tournament");
-    let response;
-    try {
-      response = await axios.delete(
-        `http://localhost:8080/api/v1/tournaments/${id}`
-      );
-      if (response.status === 200) {
-        toast.success(`${response.data.message} deleted successfully!`);
-        setTimeout(() => {
-          navigate("/tournaments");
-        }, [3000]);
-      }
-    } catch (error) {
-      console.log(error.response.data);
-      toast.error(error.response.data.message);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -74,7 +32,7 @@ const TournamentDetails = () => {
       if (response.status === 200) {
         toast.success(`${response.data.message} edited successfully!`);
         setTimeout(() => {
-          navigate("/tournaments");
+          navigate(`/club/:${user.slug}/tournaments`);
         }, [3000]);
       }
     } catch (error) {
@@ -347,23 +305,10 @@ const TournamentDetails = () => {
             Update Tournament
           </Button>
           <Toaster />
-          <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this task?"
-            okText="Yes"
-            cancelText="No"
-            onCancel={() => message.info("Cancle delete")}
-            onConfirm={(e) => handleDeleteTournament(e)}
-          >
-            <Button variant="danger" type="button">
-              Delete Tournament
-            </Button>
-            <Toaster />
-          </Popconfirm>
         </div>
       </Form>
     </div>
   );
 };
 
-export default TournamentDetails;
+export default TournamentFormUpdate;

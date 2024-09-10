@@ -93,4 +93,21 @@ const tournamentSchema = mongoose.Schema(
   }
 );
 
+// Middleware to handle removal from the Tournament when an owner is deleted
+tournamentSchema.post("findOneAndDelete", async function (doc, next) {
+  try {
+    // `this` is the owner being removed
+
+    const result = await mongoose
+      .model("owner")
+      .deleteMany({ tournament: doc._id });
+    console.log(`${result.deletedCount} pigeon owner deleted with tournament!`);
+    console.log(result);
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default mongoose.model("Tournament", tournamentSchema);

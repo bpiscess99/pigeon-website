@@ -48,4 +48,21 @@ const employeeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Middleware to handle removal from the Tournament when an owner is deleted
+employeeSchema.post("findOneAndDelete", async function (doc, next) {
+  try {
+    // `this` is the owner being removed
+
+    const result = await mongoose.model("Tournament").updateOne(
+      { _id: doc.tournament },
+      { $pull: { pigeonOwners: doc._id } } // Assuming the `owners` field is an array of owner references in the Tournament model
+    );
+    console.log(`${result.modifiedCount} pigeon owner pull from tournament!`);
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default mongoose.model("owner", employeeSchema);
