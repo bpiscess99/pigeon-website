@@ -12,7 +12,7 @@ const Createclub = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const { setClubs } = useContext(ClubsContext);
-
+  const token = localStorage.getItem("token");
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
@@ -24,6 +24,12 @@ const Createclub = () => {
           cname,
           password,
           role: 0,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         }
       );
       if (res.data.success) {

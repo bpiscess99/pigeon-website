@@ -8,8 +8,11 @@ import {
 } from "../controllers/imageController.js";
 const router = express.Router();
 
-router.route("/").post(uploadImage, addImage).get(getImages);
+router
+  .route("/")
+  .post(requiresingnin, isadmin, uploadImage, addImage)
+  .get(getImages);
 
-router.delete("/:id", deleteImage);
+router.delete("/:id", requiresingnin, isadmin, deleteImage);
 
 export default router;

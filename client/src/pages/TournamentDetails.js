@@ -12,28 +12,6 @@ const TournamentDetails = () => {
   const [tournamentDetails, setTournamentDetails] = useState(tournament);
   const { id } = useParams();
 
-  const [owners, setOwners] = useState([]);
-  const fetchOwners = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/v1/allowners"
-      ); // Adjust the URL to your backend endpoint
-      const options = response.data.map((_, index) => {
-        return {
-          label: _.name,
-          value: _.name,
-        };
-      });
-      setOwners(options);
-    } catch (error) {
-      console.error("Error fetching owners:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchOwners();
-  }, []);
-
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setTournamentDetails((prevTournament) => {
@@ -43,13 +21,21 @@ const TournamentDetails = () => {
       };
     });
   };
+  console.log(tournamentDetails);
+
+  const token = localStorage.getItem("token");
 
   const handleDeleteTournament = async () => {
     console.log("delete tournament");
     let response;
     try {
       response = await axios.delete(
-        `http://localhost:8080/api/v1/tournaments/${id}`
+        `http://localhost:8080/api/v1/tournaments/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 200) {
         toast.success(`${response.data.message} deleted successfully!`);
@@ -62,6 +48,12 @@ const TournamentDetails = () => {
       toast.error(error.response.data.message);
     }
   };
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,6 +63,7 @@ const TournamentDetails = () => {
         `http://localhost:8080/api/v1/tournaments/${id}`,
         tournamentDetails
       );
+      console.log(response.data);
       if (response.status === 200) {
         toast.success(`${response.data.message} edited successfully!`);
         setTimeout(() => {

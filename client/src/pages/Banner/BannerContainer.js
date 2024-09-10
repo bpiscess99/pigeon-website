@@ -3,6 +3,7 @@ import { Button, Image, Popconfirm, Tag } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
+import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 const BannerContainer = () => {
@@ -38,6 +39,7 @@ const BannerContainer = () => {
       console.log(response);
     } catch (error) {
       console.error("failed to delete", error);
+      toast("you are unauthorized");
     }
   };
   return (
@@ -95,6 +97,7 @@ const BannerContainer = () => {
                   <Button danger>
                     <DeleteOutlined /> Delete Banner
                   </Button>
+                  <Toaster />
                 </Popconfirm>
               </div>
             </div>

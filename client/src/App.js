@@ -31,6 +31,7 @@ import AdminViewPigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminV
 import AdminAddPigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminAddPigeonOwnerResult";
 import AdminUpdatePigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminUpdatePigeonOwnerResult";
 import TournamentFormUpdate from "./pages/ClubOwnerDashboard/TournamentFormUpdate";
+import UnAuthorized from "./pages/components/UnAuthorized";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Dashboard />} />
+        <Route path="unauthorized" element={<UnAuthorized />} />
         <Route element={<Layout />}>
           <Route path="/dashboard" element={<AdminDashboard />} />
           {/* clubs */}

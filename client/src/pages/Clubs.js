@@ -19,13 +19,20 @@ const Clubs = () => {
   const handleDeleteClick = (club) => {
     setDeletingClub(club); // Open the delete confirmation modal
   };
-
+  const token = localStorage.getItem("token");
   const handleSave = async (id, updatedData) => {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/v1/auth/clubs/${id}`,
-        updatedData
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
+
       if (response.data.success) {
         toast.success(response.data.message);
         setClubs(
@@ -44,7 +51,13 @@ const Clubs = () => {
   const handleConfirmDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/v1/auth/clubs/${deletingClub._id}`
+        `http://localhost:8080/api/v1/auth/clubs/${deletingClub._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
       if (response.data.success) {
         toast.success(response.data.message);

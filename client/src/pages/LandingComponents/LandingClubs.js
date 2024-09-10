@@ -63,16 +63,16 @@ const LandingClubs = () => {
                           <p>Total Time</p>
                           <p>1st Prize</p>
                         </div>
-                        {tournament.pigeonOwners.map((pigeonOwner, index) => {
+                        {tournament?.pigeonOwners.map((pigeonOwner, index) => {
                           return (
                             <div className="d-flex gap-2 border shadow-sm px-2 pt-1 justify-content-between text-center">
                               <p>{index}</p>
-                              <p>{pigeonOwner.name}</p>
+                              <p>{pigeonOwner?.name}</p>
                               <p>
-                                {pigeonOwner.city}{" "}
-                                <Tag color="blue">{pigeonOwner.contacts}</Tag>
+                                {pigeonOwner?.city}{" "}
+                                <Tag color="blue">{pigeonOwner?.contacts}</Tag>
                               </p>
-                              <p>{pigeonOwner.pigeonsResults.total} </p>
+                              <p>{pigeonOwner?.pigeonsResults?.total} </p>
                               <p>{tournament.prize1}</p>
                             </div>
                           );

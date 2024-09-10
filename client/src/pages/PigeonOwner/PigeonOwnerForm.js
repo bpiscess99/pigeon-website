@@ -17,6 +17,7 @@ const PigeonOwnerForm = () => {
   const [tournaments, setTournaments] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
 
+  const token = localStorage.getItem("token");
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -30,22 +31,23 @@ const PigeonOwnerForm = () => {
 
     formData.append("tournament", event.target.tournament.value);
     try {
-      const response = await fetch("http://localhost:8080/api/v1/owner", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        toast.success("Owner created successfully");
-        fetchOwners();
-        formRef.current.reset();
-        setImage(null);
-        setTimeout(() => {
-          navigate(`/club/${slug}/pigeonOwners`);
-        }, 3000);
-      } else {
-        toast.error("Failed to create Owner");
-      }
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/owner",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+      toast.success("Owner created successfully");
+      fetchOwners();
+      formRef.current.reset();
+      setImage(null);
+      setTimeout(() => {
+        navigate(`/club/${slug}/pigeonOwners`);
+      }, 3000);
     } catch (error) {
       toast.error("An error occurred");
     }

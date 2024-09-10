@@ -11,6 +11,7 @@ import {
   getPigeonOwnersOfTournament,
   getTournamentOfPigeonOwners,
 } from "../controllers/Pigeonownercontroller.js";
+import { requiresingnin } from "../middlewares/Authmiddleware.js";
 
 const router = express.Router();
 
@@ -29,13 +30,13 @@ router.get(
 router.get("/allowners", getallowner);
 
 // Update Owner Route
-router.put("/owners/:id", updateOwner);
+router.put("/owners/:id", requiresingnin, updateOwner);
 
 // Delete Owner Route
-router.delete("/owners/:id", deleteOwner);
+router.delete("/owners/:id", requiresingnin, deleteOwner);
 
 // router.put('/employees/:id',updateEmployee);
 // router.delete('/employees/:id',deleteEmployee);
-router.route("/createResults").patch(createPegionResults);
+router.route("/createResults").patch(requiresingnin, createPegionResults);
 
 export default router;

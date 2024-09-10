@@ -10,13 +10,14 @@ import {
   getAllTournamentsWithPigeonOwners,
   getTournamentsOfClubWithPigeonOwners,
 } from "../controllers/tournamentController.js";
+import { isadmin, requiresingnin } from "../middlewares/Authmiddleware.js";
 // import { requiresingnin } from "../middlewares/Authmiddleware.js";
 
 const router = express.Router();
 router.route("/club/:club_id").get(getTournamentsOfClub);
-
 router.route("/").get(getAllTournaments);
-router.route("/").post(uploadImage, createTournament);
+
+router.route("/").post(uploadImage, requiresingnin, createTournament);
 
 router
   .route("/tournamentsWithPigeonOwners")
@@ -29,6 +30,6 @@ router
 router
   .route("/:tournamentId")
   .get(getTournament)
-  .delete(deleteTournament)
+  .delete(requiresingnin, isadmin, deleteTournament)
   .patch(updateTournament);
 export default router;

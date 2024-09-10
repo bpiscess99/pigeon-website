@@ -1,7 +1,6 @@
-// import { Select } from "antd";
 import { Breadcrumb, TimePicker } from "antd";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import toast, { Toaster } from "react-hot-toast";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -11,6 +10,8 @@ const TournamentForm = () => {
   const navigate = useNavigate();
   const { setTournaments } = useContext(TournamentContext);
   const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
+
   const [tournamentDetails, setTournamentDetails] = useState({
     owner_id: user.id,
     image: "",
@@ -33,27 +34,6 @@ const TournamentForm = () => {
     prize4: "",
     prize5: "",
   });
-  const [owners, setOwners] = useState([]);
-  const fetchOwners = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/v1/allowners"
-      );
-      const options = response.data.map((_, index) => {
-        return {
-          label: _.name,
-          value: _.name,
-        };
-      });
-      setOwners(options);
-    } catch (error) {
-      console.error("Error fetching owners:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchOwners();
-  }, []);
 
   const handleFormChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -89,6 +69,7 @@ const TournamentForm = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

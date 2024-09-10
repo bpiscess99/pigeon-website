@@ -9,6 +9,8 @@ import { ClubsProvider } from "../src/pages/Contexts/ClubsContext";
 import { TournamentProvider } from "../src/pages/Contexts/TournamentContext";
 import { PigeonProvider } from "../src/pages/Contexts/PigeonContext";
 import { BannerProvider } from "../src/pages/Contexts/BannerContext";
+import { ConfigProvider } from "../src/pages/Contexts/ConfigContext";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
@@ -16,7 +18,9 @@ root.render(
       <TournamentProvider>
         <PigeonProvider>
           <BannerProvider>
-            <App />
+            <ConfigProvider>
+              <App />
+            </ConfigProvider>
           </BannerProvider>
         </PigeonProvider>
       </TournamentProvider>

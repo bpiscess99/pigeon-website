@@ -1,14 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Button, Image, Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { Breadcrumb, Tag } from "antd";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import {
-  AppstoreAddOutlined,
-  DeleteOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
+import { NavLink, useNavigate } from "react-router-dom";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const PigeonOwnerContainer = () => {
   const [owners, setOwners] = useState([]);
@@ -19,7 +15,7 @@ const PigeonOwnerContainer = () => {
   const navigate = useNavigate();
   const slug = JSON.parse(localStorage.getItem("user")).slug;
   const [activeTournamentId, setActiveTournamentId] = useState("");
-
+  const token = localStorage.getItem("token");
   const handleEditClick = (owner) => {
     setEditingOwner(owner); // Open the modal with owner data
   };
@@ -28,7 +24,13 @@ const PigeonOwnerContainer = () => {
     try {
       const response = await axios.put(
         `http://localhost:8080/api/v1/owners/${id}`,
-        updatedData
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
       if (response.data.success) {
         toast.success(response.data.message);
@@ -54,18 +56,23 @@ const PigeonOwnerContainer = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await axios.delete(`
-        http://localhost:8080/api/v1/owners/${deletingOwner._id}`);
-      if (response.data.success) {
-        toast.success(response.data.message);
-        setOwners(owners.filter((owner) => owner._id !== deletingOwner._id)); // Remove the deleted owner from the list
-        setDeletingOwner(null); // Close the delete confirmation modal
-      } else {
-        toast.error(response.data.message);
-      }
+      const response = await axios.delete(
+        `
+        http://localhost:8080/api/v1/owners/${deletingOwner._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+
+      toast.success(response.data.message);
+      setOwners(owners.filter((owner) => owner._id !== deletingOwner._id)); // Remove the deleted owner from the list
+      setDeletingOwner(null); // Close the delete confirmation modal
     } catch (error) {
       console.error("Error deleting owner:", error);
-      toast.error("Something went wrong");
+      toast.error(error.response.data.message);
     }
   };
 

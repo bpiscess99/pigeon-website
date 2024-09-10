@@ -1,5 +1,5 @@
 import express from "express";
-import { requiresingnin } from "../middlewares/Authmiddleware.js";
+import { isadmin, requiresingnin } from "../middlewares/Authmiddleware.js";
 import {
   deleteClubController,
   getAllClubsController,
@@ -12,17 +12,16 @@ import {
 
 const router = express.Router();
 
-router.post("/register", registercontroller);
+router.post("/register", requiresingnin, isadmin, registercontroller);
 router.get("/clubs", getAllClubsController);
 router
   .route("/clubs/:id")
-  .put(updateClubController)
-  .delete(deleteClubController);
+  .put(requiresingnin, isadmin, updateClubController)
+  .delete(requiresingnin, isadmin, deleteClubController);
 
 router.post("/login", logincontroller);
 router.get("/clubs/:slug", getClubBySlugController);
 
-// working above
 router.get("/test", requiresingnin, testcontroller);
 router.get("/user-auth", requiresingnin, (req, res) => {
   res.status(201).send({ ok: true });

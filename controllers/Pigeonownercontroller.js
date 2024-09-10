@@ -45,6 +45,8 @@ export const getPigeonOwnersOfTournament = async (req, res) => {
 export const createOwner = async (req, res) => {
   try {
     const { name, contacts, city, tournament } = req.body;
+    console.log(tournament);
+
     const isTournamentExist = await Tournament.findById(tournament);
     if (!isTournamentExist) {
       return res.status(400).json({

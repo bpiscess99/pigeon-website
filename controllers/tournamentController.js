@@ -166,6 +166,7 @@ export const updateTournament = async (req, res) => {
         message: `tournament not found with ${tournamentId}`,
       });
     }
+    console.log(req.body);
     const updated_tournament = await Tournament.findByIdAndUpdate(
       tournamentId,
       req.body,

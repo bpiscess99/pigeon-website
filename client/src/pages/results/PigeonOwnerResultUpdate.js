@@ -130,7 +130,7 @@ const PigeonOwnerResultUpdate = () => {
     updateOwner.pigeonsResults.sixthPigeonReturnTime,
     updateOwner.pigeonsResults.seventhPigeonReturnTime,
   ]);
-
+  const token = localStorage.getItem("token");
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const {
@@ -159,7 +159,13 @@ const PigeonOwnerResultUpdate = () => {
     try {
       const response = await axios.patch(
         "http://localhost:8080/api/v1/createResults/",
-        update
+        update,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
       console.log(response);
       if (response.status === 200) {

@@ -12,6 +12,14 @@ const BannerForm = () => {
   const handleInput = (e) => {
     setImageUrl(e.target.files[0]);
   };
+  const token = localStorage.getItem("token");
+
+  const configForm = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   const handleUpload = async (e) => {
     try {
@@ -19,7 +27,11 @@ const BannerForm = () => {
       const formData = new FormData();
       formData.append("image", imageUrl);
 
-      await axios.post("http://localhost:8080/api/v1/images", formData);
+      await axios.post(
+        "http://localhost:8080/api/v1/images",
+        formData,
+        configForm
+      );
       toast.success("Banner Uploaded Successfully!");
       setTimeout(() => {
         navigate("/banners");

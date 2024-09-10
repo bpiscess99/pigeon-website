@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import TournamentContext from "../Contexts/TournamentContext";
 import { Button } from "react-bootstrap";
 import { Breadcrumb } from "antd";
+import axios from "axios";
 
 const AdminPigeonForm = () => {
   const [phoneError, setPhoneError] = useState("");
@@ -13,7 +14,15 @@ const AdminPigeonForm = () => {
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
   const { tournaments } = useContext(TournamentContext);
+  const token = localStorage.getItem("token");
+  console.log(token);
 
+  const configForm = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`,
+    },
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -27,23 +36,21 @@ const AdminPigeonForm = () => {
 
     formData.append("tournament", event.target.tournament.value);
     try {
-      const response = await fetch("http://localhost:8080/api/v1/owner", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/owner",
+        configForm
+      );
+      console.log(response);
 
-      if (response.ok) {
-        toast.success("Owner created successfully");
-        formRef.current.reset();
-        setImage(null);
-        setTimeout(() => {
-          navigate(`/pigeonOwners`);
-        }, 3000);
-      } else {
-        toast.error("Failed to create Owner");
-      }
+      toast.success("Owner created successfully");
+      formRef.current.reset();
+      setImage(null);
+      setTimeout(() => {
+        navigate(`/pigeonOwners`);
+      }, 3000);
     } catch (error) {
       toast.error("An error occurred");
+      console.log(error);
     }
   };
 
