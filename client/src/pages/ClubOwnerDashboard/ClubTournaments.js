@@ -15,6 +15,8 @@ const ClubTournaments = () => {
       const response = await axios.get(
         `http://localhost:8080/api/v1/tournaments/club/:${user.id}`
       );
+      console.log(response.data);
+
       if (response.data.success) {
         setTournaments(response.data.clubTournaments);
       }
@@ -89,6 +91,12 @@ const ClubTournaments = () => {
       align: "center",
       dataIndex: "numberOfDays",
     },
+    {
+      title: "Landed Pigeons",
+      align: "center",
+      dataIndex: "landedPigeons",
+    },
+
     {
       title: "Type",
       align: "center",

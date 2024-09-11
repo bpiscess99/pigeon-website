@@ -32,6 +32,9 @@ import AdminAddPigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminAd
 import AdminUpdatePigeonOwnerResult from "./pages/AdminPigeonOwnerContainer/AdminUpdatePigeonOwnerResult";
 import TournamentFormUpdate from "./pages/ClubOwnerDashboard/TournamentFormUpdate";
 import UnAuthorized from "./pages/components/UnAuthorized";
+import { AdminRoutes, ClubOwnerRoutes } from "./pages/components/getUserRole";
+import PageNotFound from "./pages/components/PageNotFound";
+import Test from "./pages/components/Test";
 
 function App() {
   return (
@@ -39,70 +42,76 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Dashboard />} />
-        <Route path="unauthorized" element={<UnAuthorized />} />
-        <Route element={<Layout />}>
-          <Route path="/dashboard" element={<AdminDashboard />} />
-          {/* clubs */}
-          <Route path="/clubs" element={<ClubContainer />}>
-            <Route index element={<Clubs />} />
-            <Route path="create" element={<Createclub />} />
-          </Route>
-          {/* tournaments */}
-          <Route element={<TournamentLayout />}>
+        <Route element={<AdminRoutes />}>
+          <Route element={<Layout />}>
+            <Route path="/dashboard" element={<AdminDashboard />} />
+            {/* clubs */}
+            <Route path="/clubs" element={<ClubContainer />}>
+              <Route index element={<Clubs />} />
+              <Route path="create" element={<Createclub />} />
+            </Route>
+            {/* tournaments */}
+            <Route element={<TournamentLayout />}>
+              <Route
+                path="/tournaments"
+                index
+                element={<TournamentsContainer />}
+              />
+              <Route
+                path="/tournaments/tournamentForm"
+                element={<CreateTournament />}
+              />
+              <Route path="/tournaments/:id" element={<TournamentDetails />} />
+            </Route>
+
+            {/* bannners */}
+            <Route element={<BannerLayout />}>
+              <Route path="/banners/bannerForm" element={<BannerForm />} />
+              <Route path="/banners" index element={<BannerContainer />} />
+            </Route>
+
+            <Route path="/pigeonOwners" element={<AdminPigeonOwnerContainer />}>
+              <Route path="pigeonOwnerForm" element={<AdminPigeonForm />} />
+              <Route index element={<AdminPigeonOwners />} />
+            </Route>
             <Route
-              path="/tournaments"
-              index
-              element={<TournamentsContainer />}
+              path="/pigeonOwners/pigeonOwnerResult"
+              element={<AdminViewPigeonOwnerResult />}
             />
             <Route
-              path="/tournaments/tournamentForm"
-              element={<CreateTournament />}
+              path="/pigeonOwners/addPigeonOwnerResult"
+              element={<AdminAddPigeonOwnerResult />}
             />
-            <Route path="/tournaments/:id" element={<TournamentDetails />} />
+            <Route
+              path="/pigeonOwners/updatePigeonOwnerResult"
+              element={<AdminUpdatePigeonOwnerResult />}
+            />
           </Route>
-
-          {/* bannners */}
-          <Route element={<BannerLayout />}>
-            <Route path="/banners/bannerForm" element={<BannerForm />} />
-            <Route path="/banners" index element={<BannerContainer />} />
-          </Route>
-
-          <Route path="/pigeonOwners" element={<AdminPigeonOwnerContainer />}>
-            <Route path="pigeonOwnerForm" element={<AdminPigeonForm />} />
-            <Route index element={<AdminPigeonOwners />} />
-          </Route>
-          <Route
-            path="/pigeonOwners/pigeonOwnerResult"
-            element={<AdminViewPigeonOwnerResult />}
-          />
-          <Route
-            path="/pigeonOwners/addPigeonOwnerResult"
-            element={<AdminAddPigeonOwnerResult />}
-          />
-          <Route
-            path="/pigeonOwners/updatePigeonOwnerResult"
-            element={<AdminUpdatePigeonOwnerResult />}
-          />
         </Route>
-
         {/* club owner dashboard */}
-        <Route path="club/:id/" element={<ClubOwnerDashboard />} />
-        <Route path="club/:id/" element={<ClubDashboardContainer />}>
-          <Route path="tournaments" index element={<ClubTournaments />} />
-          <Route path="createTournaments" element={<TournamentForm />} />
-          <Route path="tournaments/:id" element={<TournamentFormUpdate />} />
+        <Route element={<ClubOwnerRoutes />}>
+          <Route path="club/:id/" element={<ClubOwnerDashboard />} />
+          <Route path="club/:id/" element={<ClubDashboardContainer />}>
+            <Route path="tournaments" index element={<ClubTournaments />} />
+            <Route path="createTournaments" element={<TournamentForm />} />
+            <Route path="tournaments/:id" element={<TournamentFormUpdate />} />
 
-          {/*pigeon owners  */}
-          <Route path="pigeonOwners" element={<PigeonOwnerContainer />} />
-          <Route path="pigeonOwnerForm" element={<PigeonOwnerForm />} />
-          <Route path="pigeonResultForm" element={<PigeonResultsForm />} />
-          <Route path="pigeonOwnerResults" element={<PegionOwnersResult />} />
-          <Route
-            path="pigeonOwnerResultUpdate"
-            element={<PigeonOwnerResultUpdate />}
-          />
+            {/*pigeon owners  */}
+            <Route path="pigeonOwners" element={<PigeonOwnerContainer />} />
+            <Route path="pigeonOwnerForm" element={<PigeonOwnerForm />} />
+            <Route path="pigeonResultForm" element={<PigeonResultsForm />} />
+            <Route path="pigeonOwnerResults" element={<PegionOwnersResult />} />
+            <Route
+              path="pigeonOwnerResultUpdate"
+              element={<PigeonOwnerResultUpdate />}
+            />
+          </Route>
         </Route>
+
         <Route path="/cl" element={<LandingClubs />} />
+        <Route path="unauthorized" element={<UnAuthorized />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>
   );

@@ -53,13 +53,22 @@ const AdminViewPigeonOwnerResult = () => {
       <Row className="align-items-center">
         {/* Left Side - Image */}
         <Col md={5} className="text-center">
-          <Image
-            src={`http://localhost:8080/uploads/${owner.image}`}
-            alt={owner.name}
-            fluid
-            className="shadow-lg rounded"
-            style={{ maxHeight: "400px", objectFit: "cover" }}
-          />
+          {owner.image ? (
+            <Image
+              src={`http://localhost:8080/uploads/${owner.image}`}
+              alt={owner.name}
+              fluid
+              className="shadow-lg rounded"
+              style={{ maxHeight: "400px", objectFit: "cover" }}
+            />
+          ) : (
+            <Image
+              className="rounded"
+              src={`/person.png`}
+              width="40"
+              height="40"
+            />
+          )}
         </Col>
 
         <Col md={7}>

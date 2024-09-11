@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Image } from "react-bootstrap";
 import "../../index.css";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const ClubOwnerDashboard = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
 
   const [tournaments, setTournaments] = useState([]);
   const [pigeonOwnersLength, setpigeonOwnersLength] = useState(0);
@@ -16,25 +17,23 @@ const ClubOwnerDashboard = () => {
       const response = await axios.get(
         `http://localhost:8080/api/v1/tournaments/club/:${user.id}`
       );
-
-      if (response.data.success) {
-        setTournaments(response.data.clubTournaments);
-      }
-      fetchTournamentsPigeonOwners();
+      fetchTournamentsPigeonOwners(response.data.clubTournaments);
+      setTournaments(response.data.clubTournaments);
     } catch (error) {
       console.error("Error fetching clubs:", error);
     }
   };
 
-  const fetchTournamentsPigeonOwners = async () => {
+  const fetchTournamentsPigeonOwners = async (arrayOfTournaments) => {
     const total = [];
     try {
-      tournaments.map(async (tournament) => {
+      arrayOfTournaments.map(async (tournament) => {
         try {
           const res = await axios.get(
             `http://localhost:8080/api/v1/pigeonOwners/:${tournament._id}`
           );
           total.push(res.data.pigeonOwners.length); // Handle the pigeon owners data
+          console.log(res);
         } catch (error) {
           console.error(
             `Error fetching pigeon owners for tournament ${tournament._id}:`,
@@ -100,6 +99,20 @@ const ClubOwnerDashboard = () => {
               </Button>
             </div>
           </Card.Body>
+          <Card.Footer className="d-flex justify-content-center">
+            <Button
+              variant="outline-dark"
+              className={
+                "text-decoration-none border border-dark rounded px-5 py-1"
+              }
+              onClick={() => {
+                localStorage.clear();
+                navigate("/");
+              }}
+            >
+              Log Out
+            </Button>
+          </Card.Footer>
         </Card>
       </div>
       <div className="d-flex gap-2 p-2">

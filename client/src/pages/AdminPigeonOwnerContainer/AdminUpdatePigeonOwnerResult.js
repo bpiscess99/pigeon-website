@@ -201,7 +201,7 @@ const AdminUpdatePigeonOwnerResult = () => {
                   };
                 }}
                 className={"text-decoration-none"}
-                to={`/club/:${slug}/pigeonOwners`}
+                to={`/pigeonOwners`}
               >
                 Pigeon Owners
               </NavLink>
@@ -247,9 +247,9 @@ const AdminUpdatePigeonOwnerResult = () => {
               className="px-5"
               format="HH:mm:ss"
               value={
-                updateOwner.pigeonsResults.fifthPigeonReturnTime
+                updateOwner.pigeonsResults.firstPigeonReturnTime
                   ? dayjs(
-                      updateOwner.pigeonsResults.fifthPigeonReturnTime,
+                      updateOwner.pigeonsResults.firstPigeonReturnTime,
                       "HH:mm:ss"
                     )
                   : null

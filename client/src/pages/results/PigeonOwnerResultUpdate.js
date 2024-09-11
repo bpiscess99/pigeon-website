@@ -247,9 +247,9 @@ const PigeonOwnerResultUpdate = () => {
               className="px-5"
               format="HH:mm:ss"
               value={
-                updateOwner.pigeonsResults.fifthPigeonReturnTime
+                updateOwner.pigeonsResults.firstPigeonReturnTime
                   ? dayjs(
-                      updateOwner.pigeonsResults.fifthPigeonReturnTime,
+                      updateOwner.pigeonsResults.firstPigeonReturnTime,
                       "HH:mm:ss"
                     )
                   : null

@@ -48,12 +48,6 @@ const TournamentDetails = () => {
       toast.error(error.response.data.message);
     }
   };
-  const config = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
-    },
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -225,6 +219,18 @@ const TournamentDetails = () => {
               name="continueDays"
               type="number"
               value={tournamentDetails.continueDays}
+              onChange={handleFormChange}
+            />
+          </Form.Group>
+
+          <Form.Group className="w-100">
+            <Form.Label className="label-size">Landed Pigeons </Form.Label>
+            <Form.Control
+              size="sm"
+              placeholder="Enter landed Pigeons"
+              name="landedPigeons"
+              type="number"
+              value={tournamentDetails.landedPigeons}
               onChange={handleFormChange}
             />
           </Form.Group>

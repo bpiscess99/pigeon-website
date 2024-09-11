@@ -58,6 +58,10 @@ const TournamentsContainer = () => {
         dataIndex: "continueDays",
       },
       {
+        title:"Landed Pigeons",
+        dataIndex:"landedPigeons"
+      },
+      {
         title: "No Days",
         dataIndex: "numberOfDays",
       },

@@ -157,6 +157,18 @@ const TournamentFormUpdate = () => {
             />
           </Form.Group>
           <Form.Group className="w-100">
+            <Form.Label className="label-size">Landed Pigeons </Form.Label>
+            <Form.Control
+              size="sm"
+              placeholder="Enter landed Pigeons"
+              name="landedPigeons"
+              type="number"
+              value={tournamentDetails.landedPigeons}
+              onChange={handleFormChange}
+            />
+          </Form.Group>
+
+          <Form.Group className="w-100">
             <Form.Label className="label-size">
               Note Time For Pigeons{" "}
             </Form.Label>

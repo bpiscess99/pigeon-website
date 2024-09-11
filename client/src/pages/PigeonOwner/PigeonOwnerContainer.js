@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { Button, Table } from "react-bootstrap";
+import { Button, Image, Table } from "react-bootstrap";
 import { Breadcrumb, Tag } from "antd";
 import { NavLink, useNavigate } from "react-router-dom";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
@@ -195,12 +195,21 @@ const PigeonOwnerContainer = () => {
                 <tr key={owner._id}>
                   <td>{index + 1}</td>
                   <td>
-                    <img
-                      src={`http://localhost:8080/uploads/${owner.image}`}
-                      alt={owner.name}
-                      width="40"
-                      height="40"
-                    />
+                    {owner.image ? (
+                      <Image
+                        className="rounded"
+                        src={`http://localhost:8080/uploads/${owner.image}`}
+                        width="40"
+                        height="40"
+                      />
+                    ) : (
+                      <Image
+                        className="rounded"
+                        src={`/person.png`}
+                        width="40"
+                        height="40"
+                      />
+                    )}
                   </td>
                   <td>{owner.name}</td>
                   <td>

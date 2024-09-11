@@ -28,6 +28,7 @@ const TournamentForm = () => {
     status_: "in active",
     type: "",
     numberOfPrizes: "",
+    landedPigeons: "",
     prize1: "",
     prize2: "",
     prize3: "",
@@ -62,6 +63,7 @@ const TournamentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let response;
+    console.log(tournamentDetails);
     try {
       response = await axios.post(
         "http://localhost:8080/api/v1/tournaments/",
@@ -73,6 +75,7 @@ const TournamentForm = () => {
           },
         }
       );
+      console.log(response.data);
 
       if (response.status === 201) {
         setTournaments((prev) => {
@@ -300,6 +303,18 @@ const TournamentForm = () => {
             onChange={handleFormChange}
           />
         </Form.Group>
+        <Form.Group className="w-100">
+          <Form.Label className="label-size">Landed Pigeons </Form.Label>
+          <Form.Control
+            size="sm"
+            placeholder="Enter landed Pigeons"
+            name="landedPigeons"
+            type="number"
+            value={tournamentDetails.landedPigeons}
+            onChange={handleFormChange}
+          />
+        </Form.Group>
+
         <Form.Group className="w-100">
           <Form.Label className="label-size">Continue Days </Form.Label>
           <Form.Control

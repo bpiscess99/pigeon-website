@@ -1,24 +1,87 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Carousel, Image, Tab } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Button, Carousel, Image } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import { Select, Tag } from "antd";
 import toast from "react-hot-toast";
 import TournamentContext from "./Contexts/TournamentContext";
 import ClubsContext from "./Contexts/ClubsContext";
+import Footer from "./components/Footer";
 
 const Dashboard = () => {
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
   const { clubs } = useContext(ClubsContext);
   const [results, setResults] = useState([]);
   const { tournaments, fetchTournaments } = useContext(TournamentContext);
   const [tournament, setTournament] = useState({});
   const [images, setImages] = useState([]);
+  const [ownerWithLatestTime, setOwnerWithLatestTime] = useState({});
+  const navigate = useNavigate();
+
+  const timeToSeconds = (timeStr) => {
+    const [hours, minutes, seconds] = timeStr.split(":").map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
+  };
+
+  // Function to calculate the last return time (latest) from all pigeon owners
+
+  // Function to calculate the last return time (latest) from all pigeon owners
+  const getLastReturnTime = (results) => {
+    let latestTimeInSeconds = 0; // Store the latest time in seconds
+    let ownerWithLatestTime = {}; // Object to store the owner details with the latest return time
+
+    results.forEach((owner, index) => {
+      const { pigeonsResults } = owner;
+
+      // Extract return times for each pigeon
+      const returnTimes = [
+        pigeonsResults.firstPigeonReturnTime,
+        pigeonsResults.secondPigeonReturnTime,
+        pigeonsResults.thirdPigeonReturnTime,
+        pigeonsResults.fourthPigeonReturnTime,
+        pigeonsResults.fifthPigeonReturnTime,
+        pigeonsResults.sixthPigeonReturnTime,
+        pigeonsResults.seventhPigeonReturnTime,
+      ];
+
+      // Convert return times to seconds and filter out any undefined/null times
+      const validReturnTimesInSeconds = returnTimes
+        .filter((time) => time) // Remove any null/undefined times
+        .map(timeToSeconds);
+
+      // Find the latest return time for this owner
+      const ownerLatestTime = Math.max(...validReturnTimesInSeconds);
+
+      // Update the overall latest time if the owner's time is greater
+      if (ownerLatestTime > latestTimeInSeconds) {
+        latestTimeInSeconds = ownerLatestTime;
+        ownerWithLatestTime = {
+          name: owner.name, // Pigeon owner's name
+          owner: owner,
+        };
+      }
+    });
+
+    // Convert the latest time back to hours, minutes, and seconds format
+    const hours = Math.floor(latestTimeInSeconds / 3600);
+    const minutes = Math.floor((latestTimeInSeconds % 3600) / 60);
+    const seconds = latestTimeInSeconds % 60;
+
+    // Return the owner details and the formatted latest time
+    setOwnerWithLatestTime({
+      latestTime: `${hours}:${minutes}:${seconds}`,
+      ownerWithLatestTime,
+    });
+  };
 
   const fetchResults = async (id) => {
     try {
       const response = await axios.get(
         `http://localhost:8080/api/v1/pigeonOwners/:${id}`
       );
+      getLastReturnTime(response.data.pigeonOwners);
+
       setResults(response.data.pigeonOwners);
     } catch (error) {
       console.error("Error fetching clubs:", error);
@@ -51,6 +114,7 @@ const Dashboard = () => {
     fetchImages();
     fetchTournaments();
   }, []);
+  console.log(ownerWithLatestTime);
 
   return (
     <>
@@ -154,15 +218,29 @@ const Dashboard = () => {
               </div>
               <div className="d-flex pt-2 justify-content-center align-items-center">
                 <h4 style={{ marginTop: "7px" }}>
-                  {tournament.tournamentName} - Start Time :
+                  {tournament.tournamentName} - Start Time{" "}
                   {tournament.startTime}{" "}
                 </h4>
               </div>
               <div>
                 <h5>
-                  Total Pigeons: {tournament.numberOfPigeons}, helper pigeons :
-                  <strong> {tournament.helperPigeons} </strong> Is live :{" "}
-                  <Tag color="blue"> {tournament.status_} </Tag>{" "}
+                  Participating Lofts:{tournament?.pigeonOwners?.length}, Total
+                  Pigeons:{tournament.numberOfPigeons}, Landed Pigeons:{" "}
+                  {tournament.landedPigeons}, Remaining Pigeons:{" "}
+                  {tournament.numberOfPigeons &&
+                    tournament.numberOfPigeons - tournament.landedPigeons}
+                  , Is live : <Tag color="blue"> {tournament.status_} </Tag>
+                </h5>
+                <h5>
+                  Today's winner pigeon time:{" "}
+                  {ownerWithLatestTime &&
+                    ownerWithLatestTime?.ownerWithLatestTime?.name}{" "}
+                  -
+                  <h4 className="d-inline">
+                    <div className="badge bg-primary">
+                      {ownerWithLatestTime && ownerWithLatestTime.latestTime}
+                    </div>
+                  </h4>
                 </h5>
               </div>
             </div>
@@ -187,7 +265,24 @@ const Dashboard = () => {
                   results.map((result, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>{result.name}</td>
+                      <td className="d-flex align-items-center justify-content-start gap-2">
+                        {result.image ? (
+                          <Image
+                            className="rounded"
+                            src={`http://localhost:8080/uploads/${result.image}`}
+                            width="40"
+                            height="40"
+                          />
+                        ) : (
+                          <Image
+                            className="rounded"
+                            src={`/person.png`}
+                            width="40"
+                            height="40"
+                          />
+                        )}
+                        {result.name}
+                      </td>
                       {result.pigeonsResults && (
                         <>
                           <td>{result.pigeonsResults.totalPigeons}</td>
@@ -225,29 +320,33 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
-      <footer
-        id="footers"
-        className="footers position-relative light-background"
-      >
-        <div className="container footers-top">
-          <div className="row gy-4">
-            <div className="col-lg-4 col-md-6 footers-about"></div>
-          </div>
-        </div>
-        <div className="containers copyright text-center mt-4">
-          <p>
-            © <span>Copyright</span>{" "}
-            <strong className="px-1 sitename">Pigeon</strong>{" "}
-            <span>All Rights Reserved</span>
-          </p>
-          <div className="credits">
-            Designed by{" "}
-            <a className="za" href="/">
-              Hami jutt
-            </a>
-          </div>
-        </div>
-      </footer>
+      <div className="d-flex  justify-content-end align-items-center">
+        {!token ? (
+          <Button
+            className="mx-2 px-3"
+            variant="outline-dark"
+            size="sm"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Login
+          </Button>
+        ) : (
+          <Button
+            className="mx-2 px-3"
+            variant="outline-dark"
+            size="sm"
+            onClick={() => {
+              user.role === 1 && navigate("/dashboard");
+              user.role === 0 && navigate(`/club/:${user.slug}/`);
+            }}
+          >
+            Dashboard
+          </Button>
+        )}
+      </div>
+      <Footer />
     </>
   );
 };

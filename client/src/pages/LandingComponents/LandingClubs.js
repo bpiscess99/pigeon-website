@@ -1,7 +1,7 @@
 import { Tag } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Card, Col, Image, Row } from "react-bootstrap";
+import { Card, Col, Image, Row, Table } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 
 const LandingClubs = () => {
@@ -56,27 +56,39 @@ const LandingClubs = () => {
                         ).toLocaleDateString()}
                       </Card.Subtitle>
                       <>
-                        <div className="d-flex gap-2 border shadow-sm px-2 pt-1 justify-content-between text-light bg-dark text-center">
-                          <p>#</p>
-                          <p>Pigeon Owner</p>
-                          <p>City & Phone</p>
-                          <p>Total Time</p>
-                          <p>1st Prize</p>
-                        </div>
-                        {tournament?.pigeonOwners.map((pigeonOwner, index) => {
-                          return (
-                            <div className="d-flex gap-2 border shadow-sm px-2 pt-1 justify-content-between text-center">
-                              <p>{index}</p>
-                              <p>{pigeonOwner?.name}</p>
-                              <p>
-                                {pigeonOwner?.city}{" "}
-                                <Tag color="blue">{pigeonOwner?.contacts}</Tag>
-                              </p>
-                              <p>{pigeonOwner?.pigeonsResults?.total} </p>
-                              <p>{tournament.prize1}</p>
-                            </div>
-                          );
-                        })}
+                        <Table bordered striped hover>
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Pigeon Owner</th>
+                              <th>City & Phone</th>
+                              <th>Total Time</th>
+                              <th>1st Prize</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {tournament?.pigeonOwners.map(
+                              (pigeonOwner, index) => {
+                                return (
+                                  <tr>
+                                    <td>{index}</td>
+                                    <td>{pigeonOwner?.name}</td>
+                                    <td>
+                                      {pigeonOwner?.city}{" "}
+                                      <Tag color="blue">
+                                        {pigeonOwner?.contacts}
+                                      </Tag>
+                                    </td>
+                                    <td>
+                                      {pigeonOwner?.pigeonsResults?.total}{" "}
+                                    </td>
+                                    <td>{tournament.prize1}</td>
+                                  </tr>
+                                );
+                              }
+                            )}
+                          </tbody>
+                        </Table>
                       </>
                     </Card.Body>
                   </Card>

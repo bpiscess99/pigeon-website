@@ -1,15 +1,16 @@
 import { Progress, Tag } from "antd";
 import React, { useContext } from "react";
-import { Card, Image } from "react-bootstrap";
+import { Button, Card, Image } from "react-bootstrap";
 import "../index.css";
 import TournamentContext from "./Contexts/TournamentContext";
 import PigeonContext from "./Contexts/PigeonContext";
 import BannerContext from "./Contexts/BannerContext";
 import ClubsContext from "./Contexts/ClubsContext";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
   const { tournaments } = useContext(TournamentContext);
   const { owners } = useContext(PigeonContext);
   const { banners } = useContext(BannerContext);
@@ -26,6 +27,20 @@ const AdminDashboard = () => {
             <Card.Text>{user.email}</Card.Text>
             <hr />
           </Card.Body>
+          <Card.Footer className="d-flex justify-content-center">
+            <Button
+              variant="outline-dark"
+              className={
+                "text-decoration-none border border-dark rounded px-5 py-1"
+              }
+              onClick={() => {
+                localStorage.clear();
+                navigate("/");
+              }}
+            >
+              Log Out
+            </Button>
+          </Card.Footer>
         </Card>
       </div>
       <div className="d-flex gap-2 p-2">

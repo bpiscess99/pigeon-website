@@ -204,12 +204,21 @@ const AdminPigeonOwners = () => {
               <tr key={owner._id}>
                 <td>{index + 1}</td>
                 <td>
-                  <img
-                    src={`http://localhost:8080/uploads/${owner.image}`}
-                    alt={owner.name}
-                    width="40"
-                    height="40"
-                  />
+                  {owner.image ? (
+                    <Image
+                      className="rounded"
+                      src={`http://localhost:8080/uploads/${owner.image}`}
+                      width="40"
+                      height="40"
+                    />
+                  ) : (
+                    <Image
+                      className="rounded"
+                      src={`/person.png`}
+                      width="40"
+                      height="40"
+                    />
+                  )}
                 </td>
                 <td>{owner.name}</td>
                 <td>

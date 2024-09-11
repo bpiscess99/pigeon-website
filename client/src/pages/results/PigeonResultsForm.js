@@ -203,7 +203,7 @@ const PigeonResultsForm = () => {
                 setResultsForm((prev) => {
                   return {
                     ...prev,
-                    totalPigeons: e.target.totalPigeons,
+                    totalPigeons: e.target.value,
                   };
                 });
               }}
